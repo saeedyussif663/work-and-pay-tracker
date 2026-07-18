@@ -30,7 +30,7 @@ export default function SignIn() {
   }
 
   return (
-    <section className="w-full md:max-w-114 mx-auto flex space-y-6 flex-col items-center justify-center">
+    <section className="w-full h-screen md:max-w-114 mx-auto flex space-y-6 flex-col items-center justify-center">
       <article className="self-start text-[#0E021A]">
         <h3 className="font-bold text-lg">Sign in to Work & Pay</h3>
         <div>
@@ -117,7 +117,7 @@ export default function SignIn() {
           Sign in
         </Button>
 
-        <div className="mt-3 text-center text-[#0E021A]">
+        <div className="mt-3 text-center text-sm text-[#0E021A]">
           Forgot password?{' '}
           <Link
             to="/forgot-password"

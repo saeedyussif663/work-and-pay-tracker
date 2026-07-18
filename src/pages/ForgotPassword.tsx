@@ -60,40 +60,29 @@ export default function ForgotPassword() {
     setSentTo(data.email);
   }
 
-  const logo = (
-    <div className="flex items-center gap-2.5 justify-center">
-      <img src="/icon.png" alt="icon" />
-      <h1 className="text-[#333333] text-lg md:text-2xl font-ayuga">
-        Work&Pay
-      </h1>
-    </div>
-  );
-
   if (sentTo) {
     return (
       <section className="min-h-screen flex items-center justify-center px-4">
         <article className="w-full md:max-w-96 flex flex-col items-center justify-center text-center">
-          {logo}
-
           <div className="mt-6">
             <EmailSentIllustration />
           </div>
 
-          <h3 className="mt-4 text-[#333333] font-semibold text-2xl md:text-[28px]">
+          <h3 className="mt-4 text-[#0E021A] font-semibold text-2xl md:text-[28px]">
             Verification email sent
           </h3>
-          <p className="mt-2 text-sm text-[#444444] leading-relaxed">
+          <p className="mt-2 text-sm text-[#0A0A0A] leading-relaxed">
             A verification link has been sent to your email,{' '}
-            <span className="font-semibold text-[#333333]">{sentTo}.</span>{' '}
+            <span className="font-semibold text-[#0E021A]">{sentTo}.</span>{' '}
             Kindly click on the link to reset your password.
           </p>
 
-          <p className="mt-6 text-sm text-[#444444]">
+          <p className="mt-6 text-sm text-[#0A0A0A]">
             Didn't receive any link?{' '}
             <button
               type="button"
               onClick={() => setSentTo(null)}
-              className="font-semibold text-brand-start"
+              className="font-semibold text-[#F97316]"
             >
               Resend
             </button>
@@ -104,70 +93,61 @@ export default function ForgotPassword() {
   }
 
   return (
-    <section className="min-h-screen flex items-center justify-center px-4">
-      <article className="w-full md:max-w-96 flex flex-col items-center justify-center">
-        {logo}
-
-        <article className="mt-4">
-          <div className="text-center space-y-1.5">
-            <h3 className="text-[#333333] font-semibold text-2xl md:text-[33px]">
-              Reset your password
-            </h3>
-            <p className="text-sm text-[#444444]">
-              Forgot your password? Don't eat away, we have you covered. Just
-              let us know your email address and we will email you a password
-              reset link.
-            </p>
-          </div>
-        </article>
-
-        <form
-          id="forgot-password"
-          className="mt-4 w-full"
-          onSubmit={form.handleSubmit(onSubmit)}
-        >
-          <FieldGroup className="gap-3">
-            <Controller
-              name="email"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid} className="gap-1">
-                  <FieldLabel
-                    htmlFor="forgot-email"
-                    className="font-medium text-[#333333]"
-                  >
-                    Email
-                  </FieldLabel>
-                  <Input
-                    {...field}
-                    id="forgot-email"
-                    type="email"
-                    aria-invalid={fieldState.invalid}
-                    placeholder="you@example.com"
-                    autoComplete="email"
-                  />
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-          </FieldGroup>
-
-          <Button type="submit" className="mt-4 w-full">
-            Send reset link
-          </Button>
-          <div className="mt-3 text-center text-sm text-[#444444]">
-            Remembered your password?{' '}
-            <Link
-              to="/signin"
-              className="ml-3 font-semibold text-brand-start text-sm"
-            >
-              Sign In
-            </Link>
-          </div>
-        </form>
+    <section className="w-full h-screen md:max-w-114 mx-auto flex space-y-6 flex-col items-center justify-center">
+      <article className="self-start text-[#0E021A]">
+        <h3 className="font-bold text-lg"> Reset your password</h3>
+        <p className="text-sm">
+          Forgot your password? Don't eat away, we have you covered. Just let us
+          know your email address and we will email you a password reset link.
+        </p>
       </article>
+
+      <form
+        id="forgot-password"
+        className="w-full"
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
+        <FieldGroup className="gap-3">
+          <Controller
+            name="email"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid} className="gap-1">
+                <FieldLabel
+                  htmlFor="forgot-email"
+                  className="font-medium text-[#333333]"
+                >
+                  Email
+                </FieldLabel>
+                <Input
+                  {...field}
+                  id="forgot-email"
+                  type="email"
+                  aria-invalid={fieldState.invalid}
+                  placeholder="you@example.com"
+                  autoComplete="email"
+                />
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </Field>
+            )}
+          />
+        </FieldGroup>
+
+        <Button type="submit" className="mt-4 w-full">
+          Send reset link
+        </Button>
+        <div className="mt-3 text-center text-sm text-[#444444]">
+          Remembered your password?{' '}
+          <Link
+            to="/signin"
+            className="ml-3 font-semibold text-brand-start text-sm"
+          >
+            Sign In
+          </Link>
+        </div>
+      </form>
     </section>
   );
 }

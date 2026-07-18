@@ -11,7 +11,7 @@ export default function AuthLayout() {
         />
         <div className="absolute inset-0 bg-radial from-[#00000000] to-[#FF6C17]/40"></div>
       </article>
-      <article className=" flex-1">
+      <article className="px-4 flex-1">
         <Outlet />
       </article>
     </section>
