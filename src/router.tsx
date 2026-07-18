@@ -8,6 +8,7 @@ import Payments from './pages/Payments';
 import ResetPassword from './pages/ResetPassword';
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
+import AuthLayout from './components/ui/auth-layout';
 
 const router = createBrowserRouter([
   {
@@ -32,20 +33,25 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: '/signup',
-    element: <SignUp />,
-  },
-  {
-    path: '/signin',
-    element: <SignIn />,
-  },
-  {
-    path: '/forgot-password',
-    element: <ForgotPassword />,
-  },
-  {
-    path: '/forgot-password/:token',
-    element: <ResetPassword />,
+    element: <AuthLayout />,
+    children: [
+      {
+        path: '/signup',
+        element: <SignUp />,
+      },
+      {
+        path: '/signin',
+        element: <SignIn />,
+      },
+      {
+        path: '/forgot-password',
+        element: <ForgotPassword />,
+      },
+      {
+        path: '/forgot-password/:token',
+        element: <ResetPassword />,
+      },
+    ],
   },
 ]);
 
