@@ -42,30 +42,36 @@ export default function SignUp() {
   }
 
   return (
-    <section className="w-full h-screen md:max-w-114 mx-auto flex space-y-6 flex-col items-center justify-center">
-      <article className="self-start text-[#0E021A]">
-        <h3 className="font-bold text-lg">Sign up for Work & Pay</h3>
+    <section className="w-full min-h-full md:max-w-114 mx-auto flex flex-col justify-center py-8">
+      {" "}
+      <article className="self-start text-foreground">
+        <h3 className="font-heading font-bold text-lg tracking-tightest">
+          Sign up for Work &amp; Pay
+        </h3>
         <div>
           Already have an account?{" "}
-          <Link to="/signin" className="ml-1.5 font-semibold text-[#F97316]">
+          <Link
+            to="/signin"
+            className="ml-1.5 font-semibold text-primary hover:text-primary/80"
+          >
             Sign In
           </Link>
         </div>
       </article>
-
-      <article className="w-full space-y-6">
-        <div className="cursor-pointer w-full py-3.5 flex gap-2 items-center text-[#0A0A0A] font-medium text-sm justify-center bg-[#F0F0F0] rounded-2xl">
+      <article className="w-full space-y-6 mt-1.5">
+        <div className="cursor-pointer w-full py-3.5 flex gap-2 items-center text-foreground font-mono text-xs uppercase tracking-wide font-medium justify-center bg-card border border-border rounded-lg hover:bg-muted transition-colors">
           <img src="/google-logo.png" alt="google-logo" />
           Continue with Google
         </div>
 
         <div className="flex items-center gap-8">
-          <div className="flex-1 h-px bg-[#D4D4D4]"></div>
-          <p className="font-medium text-sm">or</p>
-          <div className="flex-1 h-px bg-[#D4D4D4]"></div>
+          <div className="flex-1 h-px bg-border"></div>
+          <p className="font-mono text-xs uppercase tracking-wide text-muted-foreground">
+            or
+          </p>
+          <div className="flex-1 h-px bg-border"></div>
         </div>
       </article>
-
       <form
         id="signup"
         className="w-full"
@@ -79,7 +85,7 @@ export default function SignUp() {
               <Field data-invalid={fieldState.invalid} className="gap-1">
                 <FieldLabel
                   htmlFor="signup-name"
-                  className="font-medium text-[#0A0A0A]"
+                  className="font-mono text-xs uppercase tracking-wide text-foreground font-medium"
                 >
                   Name
                 </FieldLabel>
@@ -103,7 +109,7 @@ export default function SignUp() {
               <Field data-invalid={fieldState.invalid} className="gap-1">
                 <FieldLabel
                   htmlFor="signup-email"
-                  className="font-medium text-[#0A0A0A]"
+                  className="font-mono text-xs uppercase tracking-wide text-foreground font-medium"
                 >
                   Email
                 </FieldLabel>
@@ -129,7 +135,7 @@ export default function SignUp() {
               <Field data-invalid={fieldState.invalid} className="gap-1">
                 <FieldLabel
                   htmlFor="signup-password"
-                  className="font-medium text-[#0A0A0A]"
+                  className="font-mono text-xs uppercase tracking-wide text-foreground font-medium"
                 >
                   Password
                 </FieldLabel>
@@ -155,7 +161,7 @@ export default function SignUp() {
               <Field data-invalid={fieldState.invalid} className="gap-1">
                 <FieldLabel
                   htmlFor="signup-confirm-password"
-                  className="font-medium text-[#0A0A0A]"
+                  className="font-mono text-xs uppercase tracking-wide text-foreground font-medium"
                 >
                   Confirm Password
                 </FieldLabel>
