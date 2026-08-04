@@ -1,5 +1,5 @@
-import Eyebrow from './eyebrow';
-import Reveal from './reveal';
+import Eyebrow from "./eyebrow";
+import Reveal from "./reveal";
 
 export default function SectionHead({
   eyebrow,
@@ -11,7 +11,7 @@ export default function SectionHead({
   description: string;
 }) {
   return (
-    <Reveal className="mb-11 max-w-[640px]">
+    <Reveal className="mb-11 max-w-160">
       <Eyebrow>{eyebrow}</Eyebrow>
       <h2 className="mt-3.5 font-heading text-[28px] font-bold leading-[1.08] tracking-tightest sm:text-[40px]">
         {title}

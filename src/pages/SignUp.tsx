@@ -1,39 +1,39 @@
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   Field,
   FieldError,
   FieldGroup,
   FieldLabel,
-} from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Controller, useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
-import z from 'zod/v4';
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller, useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
+import z from "zod/v4";
 
 const formSchema = z
   .object({
-    name: z.string().min(3, 'Name should be at least 3 characters'),
-    email: z.email('Email must be a valid email address.'),
+    name: z.string().min(3, "Name should be at least 3 characters"),
+    email: z.email("Email must be a valid email address."),
     password: z
       .string()
-      .min(8, 'Password must be at least 8 characters.')
-      .max(100, 'Password must be at most 100 characters.'),
+      .min(8, "Password must be at least 8 characters.")
+      .max(100, "Password must be at most 100 characters."),
     confirm_password: z.string(),
   })
   .refine((data) => data.password === data.confirm_password, {
-    message: 'Passwords do not match.',
-    path: ['confirm_password'],
+    message: "Passwords do not match.",
+    path: ["confirm_password"],
   });
 
 export default function SignUp() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: '',
-      email: '',
-      password: '',
-      confirm_password: '',
+      name: "",
+      email: "",
+      password: "",
+      confirm_password: "",
     },
   });
 
@@ -46,7 +46,7 @@ export default function SignUp() {
       <article className="self-start text-[#0E021A]">
         <h3 className="font-bold text-lg">Sign up for Work & Pay</h3>
         <div>
-          Already have an account?{' '}
+          Already have an account?{" "}
           <Link to="/signin" className="ml-1.5 font-semibold text-[#F97316]">
             Sign In
           </Link>

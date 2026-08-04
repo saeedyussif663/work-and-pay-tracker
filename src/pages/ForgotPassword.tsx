@@ -1,19 +1,19 @@
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   Field,
   FieldError,
   FieldGroup,
   FieldLabel,
-} from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
-import z from 'zod/v4';
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
+import z from "zod/v4";
 
 const formSchema = z.object({
-  email: z.email('Email must be a valid email address.'),
+  email: z.email("Email must be a valid email address."),
 });
 
 function EmailSentIllustration() {
@@ -51,7 +51,7 @@ export default function ForgotPassword() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: '',
+      email: "",
     },
   });
 
@@ -72,13 +72,13 @@ export default function ForgotPassword() {
             Verification email sent
           </h3>
           <p className="mt-2 text-sm text-[#0A0A0A] leading-relaxed">
-            A verification link has been sent to your email,{' '}
-            <span className="font-semibold text-[#0E021A]">{sentTo}.</span>{' '}
+            A verification link has been sent to your email,{" "}
+            <span className="font-semibold text-[#0E021A]">{sentTo}.</span>{" "}
             Kindly click on the link to reset your password.
           </p>
 
           <p className="mt-6 text-sm text-[#0A0A0A]">
-            Didn't receive any link?{' '}
+            Didn't receive any link?{" "}
             <button
               type="button"
               onClick={() => setSentTo(null)}
@@ -139,7 +139,7 @@ export default function ForgotPassword() {
           Send reset link
         </Button>
         <div className="mt-3 text-center text-sm text-[#444444]">
-          Remembered your password?{' '}
+          Remembered your password?{" "}
           <Link
             to="/signin"
             className="ml-3 font-semibold text-brand-start text-sm"

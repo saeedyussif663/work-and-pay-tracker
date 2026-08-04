@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   Sidebar,
   SidebarContent,
@@ -8,31 +8,31 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from '@/components/ui/sidebar';
+} from "@/components/ui/sidebar";
 import {
   ChartLineUpIcon,
   CreditCardIcon,
   HouseIcon,
   SignOutIcon,
-} from '@phosphor-icons/react';
-import { NavLink } from 'react-router-dom';
+} from "@phosphor-icons/react";
+import { NavLink } from "react-router-dom";
 
 const navItems = [
-  { to: '/dashboard', label: 'Dashboard', icon: HouseIcon },
-  { to: '/investment', label: 'Investment', icon: ChartLineUpIcon },
-  { to: '/payments', label: 'Payments', icon: CreditCardIcon },
+  { to: "/dashboard", label: "Dashboard", icon: HouseIcon },
+  { to: "/investment", label: "Investment", icon: ChartLineUpIcon },
+  { to: "/payments", label: "Payments", icon: CreditCardIcon },
 ];
 
 const user = {
-  name: 'Saeed Yussif',
-  email: 'saeedyussif663@gmail.com',
+  name: "Saeed Yussif",
+  email: "saeedyussif663@gmail.com",
 };
 
 function getInitials(name: string) {
   return name
-    .split(' ')
+    .split(" ")
     .map((n) => n[0])
-    .join('')
+    .join("")
     .toUpperCase()
     .slice(0, 2);
 }
@@ -57,7 +57,7 @@ export function AppSidebar() {
                       isActive={isActive}
                       className="rounded-lg"
                     >
-                      <Icon className={isActive ? 'text-brand-start' : ''} />
+                      <Icon className={isActive ? "text-brand-start" : ""} />
                       <span>{label}</span>
                     </SidebarMenuButton>
                   )}

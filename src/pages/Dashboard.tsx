@@ -1,10 +1,10 @@
-import { DashboardCard } from '@/components/dashboard-card';
+import { DashboardCard } from "@/components/dashboard-card";
 
 const stats = [
-  { label: 'Total Invested', value: 0 },
-  { label: 'Total Recouped', value: 0 },
-  { label: 'Net Profit', value: 0 },
-  { label: 'Outstanding', value: 0 },
+  { label: "Total Invested", value: 0 },
+  { label: "Total Recouped", value: 0 },
+  { label: "Net Profit", value: 0 },
+  { label: "Outstanding", value: 0 },
 ];
 
 export default function Dashboard() {

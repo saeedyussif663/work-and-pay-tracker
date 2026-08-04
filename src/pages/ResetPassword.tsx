@@ -1,26 +1,26 @@
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   Field,
   FieldError,
   FieldGroup,
   FieldLabel,
-} from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Eye, EyeOff } from 'lucide-react';
-import { useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { Link, useParams } from 'react-router-dom';
-import z from 'zod/v4';
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { Link, useParams } from "react-router-dom";
+import z from "zod/v4";
 
 const formSchema = z
   .object({
-    password: z.string().min(1, 'Password is required.'),
+    password: z.string().min(1, "Password is required."),
     confirm_password: z.string(),
   })
   .refine((data) => data.password === data.confirm_password, {
-    message: 'Passwords must match.',
-    path: ['confirm_password'],
+    message: "Passwords must match.",
+    path: ["confirm_password"],
   });
 
 export default function ResetPassword() {
@@ -31,8 +31,8 @@ export default function ResetPassword() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      password: '',
-      confirm_password: '',
+      password: "",
+      confirm_password: "",
     },
   });
 
@@ -70,7 +70,7 @@ export default function ResetPassword() {
                   <Input
                     {...field}
                     id="reset-password-input"
-                    type={showPassword ? 'text' : 'password'}
+                    type={showPassword ? "text" : "password"}
                     aria-invalid={fieldState.invalid}
                     placeholder="Enter new password"
                     className="pr-9"
@@ -110,7 +110,7 @@ export default function ResetPassword() {
                   <Input
                     {...field}
                     id="reset-confirm-password"
-                    type={showConfirm ? 'text' : 'password'}
+                    type={showConfirm ? "text" : "password"}
                     aria-invalid={fieldState.invalid}
                     placeholder="Confirm new password"
                     className="pr-9"
@@ -141,7 +141,7 @@ export default function ResetPassword() {
         </Button>
 
         <div className="mt-3 text-center text-[#0E021A] text-sm">
-          Remembered your password?{' '}
+          Remembered your password?{" "}
           <Link
             to="/signin"
             className="ml-3 font-semibold text-[#F97316] text-sm"

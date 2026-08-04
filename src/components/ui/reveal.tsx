@@ -1,5 +1,5 @@
-import useInView from '@/hooks/use-in-view';
-import { cn } from '@/lib/utils';
+import useInView from "@/hooks/use-in-view";
+import { cn } from "@/lib/utils";
 
 export default function Reveal({
   children,
@@ -13,8 +13,8 @@ export default function Reveal({
     <div
       ref={ref}
       className={cn(
-        'transition-all duration-700 ease-out motion-reduce:transition-none motion-reduce:transform-none',
-        inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4',
+        "transition-all duration-700 ease-out motion-reduce:transition-none motion-reduce:transform-none",
+        inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4",
         className,
       )}
     >

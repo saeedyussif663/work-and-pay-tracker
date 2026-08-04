@@ -1,7 +1,7 @@
 export default function Footer() {
   return (
     <footer className="border-t border-background/10 bg-foreground pb-7 pt-12 text-background">
-      <div className="mx-auto max-w-[1120px] px-5 sm:px-10">
+      <div className="mx-auto max-w-280 px-5 sm:px-10">
         <div className="flex flex-col gap-10 min-[700px]:flex-row min-[700px]:justify-between">
           <div>
             <div className="mb-3 flex items-center gap-1 font-mono text-[15px] font-semibold tracking-wide">

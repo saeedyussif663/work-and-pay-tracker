@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+import { cn } from "@/lib/utils";
 
 export default function Tally({
   filled,
@@ -13,8 +13,8 @@ export default function Tally({
         <i
           key={i}
           className={cn(
-            'h-2.5 flex-1 rounded-xs',
-            i < filled ? 'bg-success' : 'bg-border',
+            "h-2.5 flex-1 rounded-xs",
+            i < filled ? "bg-success" : "bg-border",
           )}
         />
       ))}

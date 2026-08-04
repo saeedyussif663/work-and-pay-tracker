@@ -1,28 +1,28 @@
-import Reveal from '../ui/reveal';
-import SectionHead from '../ui/section-head';
+import Reveal from "../ui/reveal";
+import SectionHead from "../ui/section-head";
 
 const STEPS = [
   {
-    num: '01',
-    title: 'Add a vehicle & rider',
+    num: "01",
+    title: "Add a vehicle & rider",
     body: "Enter the cost, the expected return, and the weekly installment. That's the plan — nothing to recalculate by hand later.",
   },
   {
-    num: '02',
-    title: 'Log payments as they land',
+    num: "02",
+    title: "Log payments as they land",
     body: "Each payment is written to the record the moment it's received. It can be viewed forever, but never changed or removed.",
   },
   {
-    num: '03',
-    title: 'Watch completion track itself',
-    body: 'Total paid, amount remaining, and the projected finish date recalculate live — based on actual pace, not the original guess.',
+    num: "03",
+    title: "Watch completion track itself",
+    body: "Total paid, amount remaining, and the projected finish date recalculate live — based on actual pace, not the original guess.",
   },
 ];
 
 export function HowItWorks() {
   return (
-    <section id="how" className="px-5 py-[76px] sm:px-10">
-      <div className="mx-auto max-w-[1120px]">
+    <section id="how" className="px-5 py-19 sm:px-10">
+      <div className="mx-auto max-w-280">
         <SectionHead
           eyebrow="How it works"
           title="Three steps. Then it runs itself."

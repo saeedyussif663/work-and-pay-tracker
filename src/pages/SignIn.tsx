@@ -1,27 +1,27 @@
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   Field,
   FieldError,
   FieldGroup,
   FieldLabel,
-} from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Controller, useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
-import z from 'zod/v4';
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller, useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
+import z from "zod/v4";
 
 const formSchema = z.object({
-  email: z.email('Email must be a valid email address.'),
-  password: z.string().min(1, 'Password is required.'),
+  email: z.email("Email must be a valid email address."),
+  password: z.string().min(1, "Password is required."),
 });
 
 export default function SignIn() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
   });
 
@@ -34,7 +34,7 @@ export default function SignIn() {
       <article className="self-start text-[#0E021A]">
         <h3 className="font-bold text-lg">Sign in to Work & Pay</h3>
         <div>
-          Don't have an account?{' '}
+          Don't have an account?{" "}
           <Link to="/signup" className="ml-1.5 font-semibold text-[#F97316]">
             Sign Up
           </Link>
@@ -118,7 +118,7 @@ export default function SignIn() {
         </Button>
 
         <div className="mt-3 text-center text-sm text-[#0E021A]">
-          Forgot password?{' '}
+          Forgot password?{" "}
           <Link
             to="/forgot-password"
             className="ml-3 font-semibold text-[#F97316]"

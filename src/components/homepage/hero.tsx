@@ -1,8 +1,8 @@
-import { cn } from '@/lib/utils';
-import { Button } from '../ui/button';
-import Eyebrow from '../ui/eyebrow';
-import Reveal from '../ui/reveal';
-import Tally from '../ui/tally';
+import { cn } from "@/lib/utils";
+import { Button } from "../ui/button";
+import Eyebrow from "../ui/eyebrow";
+import Reveal from "../ui/reveal";
+import Tally from "../ui/tally";
 
 export default function Hero() {
   return (
@@ -29,7 +29,7 @@ export default function Hero() {
 
         <Reveal className="min-[900px]:ml-auto">
           <div className="relative lg:w-100 rounded-2xl border border-border bg-card px-6 pb-5.5 pt-6.5 before:absolute before:-left-2.75 before:top-1/2 before:h-5.5 before:w-5.5 before:-translate-y-1/2 before:rounded-full before:bg-background before:content-[''] after:absolute after:-right-2.75 after:top-1/2 after:h-5.5 after:w-5.5 after:-translate-y-1/2 after:rounded-full after:bg-background after:content-[''] lg:px-8 lg:pb-7 lg:pt-8 lg:before:-left-3.5 lg:before:h-7 lg:before:w-7 lg:after:-right-3.5 lg:after:h-7 lg:after:w-7">
-            <div className="absolute right-[-14px] top-5 -rotate-[9deg] rounded-md border-2 border-primary bg-primary/10 px-2.5 py-1 font-mono text-[11px] font-semibold tracking-widest text-primary max-[420px]:right-1.5 max-[420px]:top-4 lg:right-[-16px] lg:top-7 lg:px-3 lg:py-1.5 lg:text-xs">
+            <div className="absolute -right-3.5 top-5 rotate-[-9deg] rounded-md border-2 border-primary bg-primary/10 px-2.5 py-1 font-mono text-[11px] font-semibold tracking-widest text-primary max-[420px]:right-1.5 max-[420px]:top-4 lg:-right-4 lg:top-7 lg:px-3 lg:py-1.5 lg:text-xs">
               LOGGED
             </div>
 
@@ -39,17 +39,17 @@ export default function Hero() {
             </div>
 
             {[
-              ['Rider', 'K. Mensah', false],
-              ['Vehicle', 'GT-4471-23', false],
-              ['Amount', 'GHS 220.00', true],
-              ['Time', '08 Aug, 09:14', false],
+              ["Rider", "K. Mensah", false],
+              ["Vehicle", "GT-4471-23", false],
+              ["Amount", "GHS 220.00", true],
+              ["Time", "08 Aug, 09:14", false],
             ].map(([label, value, green]) => (
               <div
                 key={label as string}
                 className="flex justify-between border-b border-border py-2.5 font-mono text-[13px] last:border-b-0 lg:py-3.5 lg:text-[15px]"
               >
                 <span className="text-muted-foreground">{label}</span>
-                <span className={cn('font-semibold', green && 'text-success')}>
+                <span className={cn("font-semibold", green && "text-success")}>
                   {value}
                 </span>
               </div>
