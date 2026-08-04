@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export default function Footer() {
   return (
     <footer className="border-t border-background/10 bg-foreground pb-7 pt-12 text-background">
@@ -42,18 +44,18 @@ export default function Footer() {
               <h4 className="mb-3.5 font-mono text-[11px] uppercase tracking-widest text-background/50">
                 Account
               </h4>
-              <a
-                href="#"
+              <Link
+                to="/signin"
                 className="mb-2.5 block text-sm text-background/80 hover:text-background"
               >
                 Log in
-              </a>
-              <a
-                href="#"
+              </Link>
+              <Link
+                to="/signup"
                 className="mb-2.5 block text-sm text-background/80 hover:text-background"
               >
                 Get started
-              </a>
+              </Link>
             </div>
           </div>
         </div>

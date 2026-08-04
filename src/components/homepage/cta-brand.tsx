@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
 
 export default function CtaBand() {
@@ -13,8 +14,8 @@ export default function CtaBand() {
             from the first cedi to the last.
           </p>
         </div>
-        <Button size="lg" className="w-fit">
-          Get started
+        <Button size="lg" asChild>
+          <Link to="/signup">Get started</Link>
         </Button>
       </div>
     </div>

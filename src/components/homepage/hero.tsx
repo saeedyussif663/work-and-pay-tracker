@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
 import Eyebrow from "../ui/eyebrow";
 import Reveal from "../ui/reveal";
@@ -20,7 +21,9 @@ export default function Hero() {
             notebook, the guesswork, or the argument over who paid what.
           </p>
           <div className="mt-7 flex flex-wrap gap-3">
-            <Button size="lg">Get started</Button>
+            <Button size="lg" asChild>
+              <Link to="/signup">Get started</Link>
+            </Button>
             <Button variant="outline" size="lg" asChild>
               <a href="#preview">See a vehicle card ↓</a>
             </Button>

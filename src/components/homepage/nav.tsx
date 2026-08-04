@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
 
 export default function Nav() {
@@ -30,7 +31,9 @@ export default function Nav() {
             Features
           </a>
         </nav>
-        <Button size="lg">Get started</Button>
+        <Button size="lg" asChild>
+          <Link to="/signup">Get started</Link>
+        </Button>
       </div>
     </header>
   );
