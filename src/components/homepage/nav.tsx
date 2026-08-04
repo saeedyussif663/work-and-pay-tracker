@@ -9,6 +9,7 @@ export default function Nav() {
           WORK / PAY
           <span className="text-primary">]</span>
         </div>
+
         <nav className="hidden gap-7 text-sm text-foreground/80 min-[860px]:flex">
           <a
             href="#how"
