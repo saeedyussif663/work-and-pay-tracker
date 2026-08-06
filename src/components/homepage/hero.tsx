@@ -1,7 +1,6 @@
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
-import Eyebrow from "../ui/eyebrow";
 import Reveal from "../ui/reveal";
 import Tally from "../ui/tally";
 
@@ -10,7 +9,6 @@ export default function Hero() {
     <section className="px-5 pb-10 pt-14 sm:px-10 sm:pt-20">
       <div className="mx-auto grid max-w-280 items-center gap-10 min-[900px]:grid-cols-[1.1fr_0.9fr] min-[900px]:gap-14">
         <div>
-          <Eyebrow>Work &amp; Pay Tracker — for vehicle owners</Eyebrow>
           <h1 className="mt-4 font-heading text-[38px] font-bold leading-[1.02] tracking-tightest sm:text-[62px]">
             Every payment.
             <br />

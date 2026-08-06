@@ -10,7 +10,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import {
-  ChartLineUpIcon,
+  CarIcon,
   CreditCardIcon,
   HouseIcon,
   SignOutIcon,
@@ -19,7 +19,7 @@ import { NavLink } from "react-router-dom";
 
 const navItems = [
   { to: "/dashboard", label: "Dashboard", icon: HouseIcon },
-  { to: "/investment", label: "Investment", icon: ChartLineUpIcon },
+  { to: "/vehicles", label: "Vehicles", icon: CarIcon },
   { to: "/payments", label: "Payments", icon: CreditCardIcon },
 ];
 
@@ -42,8 +42,11 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarHeader>
         <div className="flex items-center gap-2.5 px-2 py-3">
-          <img src="/icon.png" alt="Work&Pay icon" className="size-6" />
-          <span className="font-ayuga text-lg text-[#333333]">Work&Pay</span>
+          <div className="flex items-center gap-1 font-mono text-[15px] font-semibold tracking-wide text-foreground">
+            <span className="text-primary">[</span>
+            WORK / PAY
+            <span className="text-primary">]</span>
+          </div>
         </div>
       </SidebarHeader>
       <SidebarContent>
@@ -57,7 +60,7 @@ export function AppSidebar() {
                       isActive={isActive}
                       className="rounded-lg"
                     >
-                      <Icon className={isActive ? "text-brand-start" : ""} />
+                      <Icon className={isActive ? "text-primary" : ""} />
                       <span>{label}</span>
                     </SidebarMenuButton>
                   )}

@@ -1,13 +1,33 @@
 type DashboardCardProps = {
   label: string;
   value: number;
+  format?: "currency" | "number";
 };
 
-export function DashboardCard({ label, value }: DashboardCardProps) {
+function formatValue(value: number, format: "currency" | "number") {
+  if (format === "currency") {
+    return new Intl.NumberFormat("en-GH", {
+      style: "currency",
+      currency: "GHS",
+      maximumFractionDigits: 0,
+    }).format(value);
+  }
+  return new Intl.NumberFormat("en-GH").format(value);
+}
+
+export function DashboardCard({
+  label,
+  value,
+  format = "number",
+}: DashboardCardProps) {
   return (
-    <div className="rounded-md shadow-none border border-[#F5F5F5] p-4 flex-1">
-      <p className="text-[#757575] font-medium">{label}</p>
-      <p className="text-3xl font-semibold text-[#333333]">{value}</p>
+    <div className="rounded-lg border border-border bg-card p-4 md:p-5">
+      <p className="font-mono text-xs uppercase tracking-wide text-muted-foreground">
+        {label}
+      </p>
+      <p className="mt-1.5 font-mono text-xl font-semibold text-foreground md:text-2xl">
+        {formatValue(value, format)}
+      </p>
     </div>
   );
 }

@@ -42,7 +42,7 @@ export default function SignUp() {
   }
 
   return (
-    <section className="w-full min-h-full md:max-w-114 mx-auto flex flex-col justify-center md:py-8">
+    <section className="w-full min-h-screen md:max-w-80 mx-auto flex flex-col justify-center md:py-8">
       {" "}
       <article className="self-start text-foreground">
         <h3 className="font-heading font-bold text-lg tracking-tightest">
@@ -59,8 +59,8 @@ export default function SignUp() {
         </div>
       </article>
       <article className="w-full space-y-6 mt-1.5">
-        <div className="cursor-pointer w-full py-3.5 flex gap-2 items-center text-foreground font-mono text-xs uppercase tracking-wide font-medium justify-center bg-card border border-border rounded-lg hover:bg-muted transition-colors">
-          <img src="/google-logo.png" alt="google-logo" />
+        <div className="cursor-pointer w-full py-2 flex gap-2 items-center text-foreground font-mono text-xs uppercase tracking-wide font-medium justify-center bg-card border border-border rounded-lg hover:bg-muted transition-colors">
+          <img src="/google-logo.png" alt="google-logo" className="size-3" />
           Continue with Google
         </div>
 
@@ -85,7 +85,7 @@ export default function SignUp() {
               <Field data-invalid={fieldState.invalid} className="gap-1">
                 <FieldLabel
                   htmlFor="signup-name"
-                  className="font-mono text-xs uppercase tracking-wide text-foreground font-medium"
+                  className="font-mono text-xs  tracking-wide text-foreground font-medium"
                 >
                   Name
                 </FieldLabel>
@@ -109,7 +109,7 @@ export default function SignUp() {
               <Field data-invalid={fieldState.invalid} className="gap-1">
                 <FieldLabel
                   htmlFor="signup-email"
-                  className="font-mono text-xs uppercase tracking-wide text-foreground font-medium"
+                  className="font-mono text-xs  tracking-wide text-foreground font-medium"
                 >
                   Email
                 </FieldLabel>
@@ -135,7 +135,7 @@ export default function SignUp() {
               <Field data-invalid={fieldState.invalid} className="gap-1">
                 <FieldLabel
                   htmlFor="signup-password"
-                  className="font-mono text-xs uppercase tracking-wide text-foreground font-medium"
+                  className="font-mono text-xs  tracking-wide text-foreground font-medium"
                 >
                   Password
                 </FieldLabel>
@@ -161,7 +161,7 @@ export default function SignUp() {
               <Field data-invalid={fieldState.invalid} className="gap-1">
                 <FieldLabel
                   htmlFor="signup-confirm-password"
-                  className="font-mono text-xs uppercase tracking-wide text-foreground font-medium"
+                  className="font-mono text-xs  tracking-wide text-foreground font-medium"
                 >
                   Confirm Password
                 </FieldLabel>

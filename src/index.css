@@ -232,6 +232,10 @@
   }
 }
 
+@utility no-scrollbar {
+  @apply scrollbar-none [&::-webkit-scrollbar]:hidden;
+}
+
 body {
   font-family: var(--sans);
   font-optical-sizing: auto;

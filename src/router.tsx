@@ -3,12 +3,11 @@ import Layout from "./components/ui/layout";
 import Dashboard from "./pages/Dashboard";
 import ForgotPassword from "./pages/ForgotPassword";
 import Home from "./pages/Home";
-import Investment from "./pages/Investment";
 import Payments from "./pages/Payments";
 import ResetPassword from "./pages/ResetPassword";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
-import AuthLayout from "./components/ui/auth-layout";
+import Investment from "./pages/Vehicles";
 
 const router = createBrowserRouter([
   {
@@ -23,7 +22,7 @@ const router = createBrowserRouter([
         element: <Dashboard />,
       },
       {
-        path: "/investment",
+        path: "/vehicles",
         element: <Investment />,
       },
       {
@@ -33,25 +32,20 @@ const router = createBrowserRouter([
     ],
   },
   {
-    element: <AuthLayout />,
-    children: [
-      {
-        path: "/signup",
-        element: <SignUp />,
-      },
-      {
-        path: "/signin",
-        element: <SignIn />,
-      },
-      {
-        path: "/forgot-password",
-        element: <ForgotPassword />,
-      },
-      {
-        path: "/forgot-password/:token",
-        element: <ResetPassword />,
-      },
-    ],
+    path: "/signup",
+    element: <SignUp />,
+  },
+  {
+    path: "/signin",
+    element: <SignIn />,
+  },
+  {
+    path: "/forgot-password",
+    element: <ForgotPassword />,
+  },
+  {
+    path: "/forgot-password/:token",
+    element: <ResetPassword />,
   },
 ]);
 

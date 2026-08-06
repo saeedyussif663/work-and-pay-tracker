@@ -14,7 +14,7 @@ export default function DashboardPreview() {
         />
 
         <Reveal>
-          <div className="rounded-[20px] border border-border bg-card p-7 sm:p-10">
+          <div className="rounded-[20px] border border-border bg-card p-7 sm:p-10 ">
             <div className="max-w-115 rounded-2xl border border-border bg-background p-6">
               <div className="mb-4.5 flex items-start justify-between gap-3">
                 <div>

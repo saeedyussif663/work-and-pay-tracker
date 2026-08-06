@@ -136,7 +136,7 @@ export default function ForgotPassword() {
   }
 
   return (
-    <section className="w-full min-h-full md:max-w-114 mx-auto flex flex-col justify-center py-8">
+    <section className="w-full min-h-screen md:max-w-80 mx-auto flex flex-col justify-center md:py-8">
       <article className="self-start text-foreground">
         <h3 className="font-heading font-bold text-lg tracking-tightest">
           {" "}
@@ -161,7 +161,7 @@ export default function ForgotPassword() {
               <Field data-invalid={fieldState.invalid} className="gap-1">
                 <FieldLabel
                   htmlFor="forgot-email"
-                  className="font-mono text-xs uppercase tracking-wide text-foreground font-medium"
+                  className="font-mono text-xs tracking-wide text-foreground font-medium"
                 >
                   Email
                 </FieldLabel>
