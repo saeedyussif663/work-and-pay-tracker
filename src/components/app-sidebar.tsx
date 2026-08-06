@@ -8,9 +8,10 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import {
-  CarIcon,
+  ChartLineUpIcon,
   CreditCardIcon,
   HouseIcon,
   SignOutIcon,
@@ -19,7 +20,7 @@ import { NavLink } from "react-router-dom";
 
 const navItems = [
   { to: "/dashboard", label: "Dashboard", icon: HouseIcon },
-  { to: "/vehicles", label: "Vehicles", icon: CarIcon },
+  { to: "/vehicles", label: "Vehicle", icon: ChartLineUpIcon },
   { to: "/payments", label: "Payments", icon: CreditCardIcon },
 ];
 
@@ -38,10 +39,13 @@ function getInitials(name: string) {
 }
 
 export function AppSidebar() {
+  const { setOpenMobile } = useSidebar();
+
   return (
     <Sidebar>
       <SidebarHeader>
         <div className="flex items-center gap-2.5 px-2 py-3">
+          <img src="/icon.png" alt="Work&Pay icon" className="size-6" />
           <div className="flex items-center gap-1 font-mono text-[15px] font-semibold tracking-wide text-foreground">
             <span className="text-primary">[</span>
             WORK / PAY
@@ -54,7 +58,7 @@ export function AppSidebar() {
           <SidebarMenu className="gap-1.5">
             {navItems.map(({ to, label, icon: Icon }) => (
               <SidebarMenuItem key={to}>
-                <NavLink to={to}>
+                <NavLink to={to} onClick={() => setOpenMobile(false)}>
                   {({ isActive }) => (
                     <SidebarMenuButton
                       isActive={isActive}
