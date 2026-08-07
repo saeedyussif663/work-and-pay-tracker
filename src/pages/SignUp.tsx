@@ -42,7 +42,7 @@ export default function SignUp() {
   }
 
   return (
-    <section className="w-full min-h-screen md:max-w-80 mx-auto flex flex-col justify-center md:py-8">
+    <section className="w-full min-h-screen px-4 md:max-w-80 mx-auto flex flex-col justify-center md:py-8">
       {" "}
       <article className="self-start text-foreground">
         <h3 className="font-heading font-bold text-lg tracking-tightest">

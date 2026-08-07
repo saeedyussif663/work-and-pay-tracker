@@ -41,7 +41,7 @@ export default function ResetPassword() {
   }
 
   return (
-    <section className="w-full h-screen md:max-w-114 mx-auto flex space-y-6 flex-col items-center justify-center">
+    <section className="w-full h-screen px-4 md:max-w-114 mx-auto flex space-y-6 flex-col items-center justify-center">
       <article className="self-start text-[#0E021A]">
         <h3 className="font-bold text-lg"> Reset your password</h3>
         <p className="text-sm">

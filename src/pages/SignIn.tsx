@@ -30,7 +30,7 @@ export default function SignIn() {
   }
 
   return (
-    <section className="w-full min-h-screen md:max-w-80 mx-auto flex flex-col justify-center md:py-8">
+    <section className="w-full min-h-screen md:max-w-80 mx-auto flex flex-col px-4 justify-center md:py-8">
       <article className="self-start text-foreground">
         <h3 className="font-heading font-bold text-lg tracking-tightest">
           Sign in to Work &amp; Pay
