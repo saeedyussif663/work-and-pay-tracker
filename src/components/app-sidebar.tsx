@@ -10,6 +10,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { useAuth } from "@/hooks/use-auth";
 import {
   ChartLineUpIcon,
   CreditCardIcon,
@@ -17,6 +18,7 @@ import {
   SignOutIcon,
 } from "@phosphor-icons/react";
 import { NavLink } from "react-router-dom";
+import { UserChip } from "./ui/user-chip";
 
 const navItems = [
   { to: "/dashboard", label: "Dashboard", icon: HouseIcon },
@@ -24,22 +26,9 @@ const navItems = [
   { to: "/payments", label: "Payments", icon: CreditCardIcon },
 ];
 
-const user = {
-  name: "Saeed Yussif",
-  email: "saeedyussif663@gmail.com",
-};
-
-function getInitials(name: string) {
-  return name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase()
-    .slice(0, 2);
-}
-
 export function AppSidebar() {
   const { setOpenMobile } = useSidebar();
+  const { user, logout } = useAuth();
 
   return (
     <Sidebar>
@@ -76,16 +65,22 @@ export function AppSidebar() {
       </SidebarContent>
       <SidebarFooter>
         <div className="flex items-center gap-3 px-2 py-3">
-          <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
-            {getInitials(user.name)}
+          <div className="flex size-8 shrink-0 items-center justify-center rounded-full  text-xs font-semibold">
+            <UserChip user={user} />
           </div>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-xs font-medium">{user.name}</p>
+            <p className="truncate text-xs font-medium">{user?.name}</p>
             <p className="truncate text-xs text-muted-foreground">
-              {user.email}
+              {user?.email}
             </p>
           </div>
-          <Button variant="ghost" size="icon-sm" aria-label="Log out">
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            aria-label="Log out"
+            onClick={logout}
+            className="cursor-pointer rounded-sm"
+          >
             <SignOutIcon />
           </Button>
         </div>

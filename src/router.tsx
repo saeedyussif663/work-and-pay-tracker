@@ -1,5 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import Layout from "./components/ui/layout";
+import { checkAuth } from "./lib/check-token";
 import Dashboard from "./pages/Dashboard";
 import ForgotPassword from "./pages/ForgotPassword";
 import Home from "./pages/Home";
@@ -20,14 +21,17 @@ const router = createBrowserRouter([
       {
         path: "/dashboard",
         element: <Dashboard />,
+        loader: checkAuth,
       },
       {
         path: "/vehicles",
         element: <Investment />,
+        loader: checkAuth,
       },
       {
         path: "/payments",
         element: <Payments />,
+        loader: checkAuth,
       },
     ],
   },

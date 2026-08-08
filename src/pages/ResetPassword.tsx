@@ -6,38 +6,57 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { resetPasswordMutation } from "@/lib/auth";
+import { successStyle } from "@/lib/http";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { toast } from "sonner";
 import z from "zod/v4";
 
 const formSchema = z
   .object({
+    token: z.string().min(1, "Token is required"),
     password: z.string().min(1, "Password is required."),
-    confirm_password: z.string(),
+    confirmPassword: z.string(),
   })
-  .refine((data) => data.password === data.confirm_password, {
+  .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords must match.",
-    path: ["confirm_password"],
+    path: ["confirmPassword"],
   });
 
+export type ResetPasswordFormValues = z.infer<typeof formSchema>;
+
 export default function ResetPassword() {
+  const navigate = useNavigate();
   const { token } = useParams<{ token: string }>();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<ResetPasswordFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       password: "",
-      confirm_password: "",
+      confirmPassword: "",
+      token: token,
     },
   });
 
-  function onSubmit(data: z.infer<typeof formSchema>) {
-    console.log({ token, ...data });
+  const { mutate, isPending } = useMutation({
+    mutationFn: resetPasswordMutation,
+    onSuccess: (data) => {
+      if (data) {
+        toast.success(data.message, { style: successStyle });
+        navigate("/signin");
+      }
+    },
+  });
+
+  function onSubmit(data: ResetPasswordFormValues) {
+    mutate(data);
   }
 
   return (
@@ -96,7 +115,7 @@ export default function ResetPassword() {
           />
 
           <Controller
-            name="confirm_password"
+            name="confirmPassword"
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid} className="gap-1">
@@ -136,7 +155,7 @@ export default function ResetPassword() {
           />
         </FieldGroup>
 
-        <Button type="submit" className="mt-4 w-full">
+        <Button type="submit" className="mt-4 w-full" isLoading={isPending}>
           Reset password
         </Button>
 

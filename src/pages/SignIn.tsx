@@ -6,9 +6,16 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { TOKEN_KEY } from "@/context/auth-constants";
+import { useAuth } from "@/hooks/use-auth";
+import { signInMutation } from "@/lib/auth";
+import { successStyle } from "@/lib/http";
+import token from "@/lib/token";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { Controller, useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 import z from "zod/v4";
 
 const formSchema = z.object({
@@ -16,8 +23,13 @@ const formSchema = z.object({
   password: z.string().min(1, "Password is required."),
 });
 
+export type SignInFormValues = z.infer<typeof formSchema>;
+
 export default function SignIn() {
-  const form = useForm<z.infer<typeof formSchema>>({
+  const navigate = useNavigate();
+  const { setUser } = useAuth();
+
+  const form = useForm<SignInFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
@@ -25,8 +37,21 @@ export default function SignIn() {
     },
   });
 
-  function onSubmit(data: z.infer<typeof formSchema>) {
-    console.log(data);
+  const { mutate, isPending } = useMutation({
+    mutationFn: signInMutation,
+    onSuccess: (data) => {
+      if (data) {
+        token.set(TOKEN_KEY, data.data.token, data.data.expiresAt);
+
+        setUser(data.data);
+        toast.success(data.message, { style: successStyle });
+        navigate("/dashboard");
+      }
+    },
+  });
+
+  function onSubmit(data: SignInFormValues) {
+    mutate(data);
   }
 
   return (
@@ -120,7 +145,7 @@ export default function SignIn() {
           />
         </FieldGroup>
 
-        <Button type="submit" className="mt-4 w-full">
+        <Button type="submit" className="mt-4 w-full" isLoading={isPending}>
           Sign in
         </Button>
 

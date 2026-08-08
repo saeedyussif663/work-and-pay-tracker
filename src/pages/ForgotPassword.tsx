@@ -6,15 +6,21 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { forgotPasswordMutation } from "@/lib/auth";
+import { successStyle } from "@/lib/http";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 import z from "zod/v4";
 
 const formSchema = z.object({
   email: z.email("Email must be a valid email address."),
 });
+
+export type ForgotPasswordFormValues = z.infer<typeof formSchema>;
 
 function EmailSentIllustration() {
   return (
@@ -91,16 +97,25 @@ function EmailSentIllustration() {
 export default function ForgotPassword() {
   const [sentTo, setSentTo] = useState<string | null>(null);
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<ForgotPasswordFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
     },
   });
 
-  function onSubmit(data: z.infer<typeof formSchema>) {
-    console.log(data);
-    setSentTo(data.email);
+  const { mutate, isPending } = useMutation({
+    mutationFn: forgotPasswordMutation,
+    onSuccess: (data, variables) => {
+      if (data) {
+        toast.success(data.message, { style: successStyle });
+        setSentTo(variables.email);
+      }
+    },
+  });
+
+  function onSubmit(data: ForgotPasswordFormValues) {
+    mutate(data);
   }
 
   if (sentTo) {
@@ -124,10 +139,11 @@ export default function ForgotPassword() {
             Didn't receive any link?{" "}
             <button
               type="button"
-              onClick={() => setSentTo(null)}
+              onClick={() => mutate({ email: sentTo })}
               className="font-semibold text-primary hover:text-primary/80"
+              disabled={isPending}
             >
-              Resend
+              {isPending ? "Resending..." : "Resend"}
             </button>
           </p>
         </article>
@@ -150,7 +166,7 @@ export default function ForgotPassword() {
 
       <form
         id="forgot-password"
-        className="w-full"
+        className="w-full mt-1.5"
         onSubmit={form.handleSubmit(onSubmit)}
       >
         <FieldGroup className="gap-3">
@@ -181,7 +197,7 @@ export default function ForgotPassword() {
           />
         </FieldGroup>
 
-        <Button type="submit" className="mt-4 w-full">
+        <Button type="submit" className="mt-4 w-full" isLoading={isPending}>
           Send reset link
         </Button>
         <div className="mt-3 text-center text-sm text-muted-foreground">

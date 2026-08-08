@@ -35,7 +35,7 @@ async function handleErrors(response: Response): Promise<null | undefined> {
   const res = await response.json();
 
   if (response.status === 401) {
-    toast.error(res.error || res.message, {
+    toast.error(res.message || res.error, {
       style: errorStyle,
     });
     return;
@@ -57,8 +57,8 @@ async function handleErrors(response: Response): Promise<null | undefined> {
         style: errorStyle,
       });
     } else {
-      if (typeof res.error === "string") {
-        toast.error(res.error, {
+      if (typeof res.message === "string") {
+        toast.error(res.message, {
           style: errorStyle,
         });
         return;
@@ -67,7 +67,7 @@ async function handleErrors(response: Response): Promise<null | undefined> {
           style: errorStyle,
         });
         return;
-      } else if (typeof res.message === "string") {
+      } else if (typeof res.error === "string") {
         toast.error(res.error, {
           style: errorStyle,
         });
@@ -183,7 +183,7 @@ const update = async <TResponse = unknown, TData = unknown>(
   config: RequestInit = {},
 ): Promise<TResponse> => {
   const response = await fetch(`${baseUrl}/${url}`, {
-    method: "PUT",
+    method: "PATCH",
     headers: setHeaders(options),
     body: options.formData ? (data as BodyInit) : JSON.stringify(data),
     ...config,

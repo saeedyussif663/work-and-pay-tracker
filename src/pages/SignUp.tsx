@@ -6,9 +6,13 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { signUpMutation } from "@/lib/auth";
+import { successStyle } from "@/lib/http";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { Controller, useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 import z from "zod/v4";
 
 const formSchema = z
@@ -19,26 +23,40 @@ const formSchema = z
       .string()
       .min(8, "Password must be at least 8 characters.")
       .max(100, "Password must be at most 100 characters."),
-    confirm_password: z.string(),
+    confirmPassword: z.string(),
   })
-  .refine((data) => data.password === data.confirm_password, {
+  .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match.",
-    path: ["confirm_password"],
+    path: ["confirmPassword"],
   });
 
+export type SignupFormValues = z.infer<typeof formSchema>;
+
 export default function SignUp() {
-  const form = useForm<z.infer<typeof formSchema>>({
+  const navigate = useNavigate();
+
+  const form = useForm<SignupFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       email: "",
       password: "",
-      confirm_password: "",
+      confirmPassword: "",
     },
   });
 
-  function onSubmit(data: z.infer<typeof formSchema>) {
-    console.log(data);
+  const { mutate, isPending } = useMutation({
+    mutationFn: signUpMutation,
+    onSuccess: (data) => {
+      if (data) {
+        toast.success(data?.message, { style: successStyle });
+        navigate("/signin");
+      }
+    },
+  });
+
+  function onSubmit(data: SignupFormValues) {
+    mutate(data);
   }
 
   return (
@@ -155,7 +173,7 @@ export default function SignUp() {
           />
 
           <Controller
-            name="confirm_password"
+            name="confirmPassword"
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid} className="gap-1">
@@ -181,7 +199,7 @@ export default function SignUp() {
           />
         </FieldGroup>
 
-        <Button type="submit" className="mt-4 w-full">
+        <Button type="submit" className="mt-4 w-full" isLoading={isPending}>
           Create account
         </Button>
       </form>
