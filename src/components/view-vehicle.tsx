@@ -11,26 +11,13 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import Tally from "@/components/ui/tally";
-import { cn } from "@/lib/utils";
-import type { Vehicle } from "@/pages/Vehicles";
+import type { Vehicle } from "@/types";
 
 const currency = new Intl.NumberFormat("en-GH", {
   style: "currency",
   currency: "GHS",
   maximumFractionDigits: 0,
 });
-
-const dateFormat = new Intl.DateTimeFormat("en-GH", {
-  day: "2-digit",
-  month: "short",
-  year: "numeric",
-});
-
-const statusStyles: Record<Vehicle["status"], string> = {
-  "On track": "bg-success/10 text-success",
-  Behind: "bg-warning/10 text-warning",
-  Completed: "bg-muted text-muted-foreground",
-};
 
 interface ViewVehicleDialogProps {
   vehicle: Vehicle;
@@ -41,10 +28,10 @@ export function ViewVehicleDialog({
   vehicle,
   trigger,
 }: ViewVehicleDialogProps) {
-  const remaining = vehicle.expectedReturn - vehicle.paid;
+  const remaining = vehicle.expectedReturn - vehicle.totalPaid;
   const completion = Math.min(
     100,
-    Math.round((vehicle.paid / vehicle.expectedReturn) * 100),
+    Math.round((vehicle.totalPaid / vehicle.expectedReturn) * 100),
   );
   // Tally in dashboard-preview shows filled={6} for 62% — assume a 10-segment tally.
   const filled = Math.round(completion / 10);
@@ -62,27 +49,17 @@ export function ViewVehicleDialog({
       <DialogContent className="sm:max-w-115 rounded-md p-6">
         {/* Visually hidden — the card content below already communicates the title */}
         <DialogHeader className="sr-only">
-          <DialogTitle>{vehicle.vehicle}</DialogTitle>
+          <DialogTitle>{vehicle.name}</DialogTitle>
           <DialogDescription>
-            Cost, payments, and completion details for {vehicle.vehicle}
+            Cost, payments, and completion details for {vehicle.name}
           </DialogDescription>
         </DialogHeader>
 
-        <div className="mb-4.5 flex items-start justify-between gap-3">
-          <div>
-            <h3 className="text-[19px] font-bold">{vehicle.vehicle}</h3>
-            <div className="mt-1 font-mono text-xs text-muted-foreground">
-              Rider: {vehicle.rider}
-            </div>
+        <div className="mb-4.5">
+          <h3 className="text-[19px] font-bold">{vehicle.name}</h3>
+          <div className="mt-1 font-mono text-xs text-muted-foreground">
+            Rider: {vehicle.rider}
           </div>
-          <span
-            className={cn(
-              "whitespace-nowrap rounded-full px-3 py-1 font-mono text-[11px] uppercase tracking-wide",
-              statusStyles[vehicle.status],
-            )}
-          >
-            {vehicle.status}
-          </span>
         </div>
 
         <div className="mb-4.5 grid grid-cols-2 gap-x-5 gap-y-3.5">
@@ -94,7 +71,7 @@ export function ViewVehicleDialog({
                 currency.format(vehicle.expectedReturn),
                 false,
               ],
-              ["Paid to date", currency.format(vehicle.paid), true],
+              ["Paid to date", currency.format(vehicle.totalPaid), true],
               ["Remaining", currency.format(remaining), false],
             ] as const
           ).map(([label, value, green]) => (
@@ -103,10 +80,9 @@ export function ViewVehicleDialog({
                 {label}
               </div>
               <div
-                className={cn(
-                  "font-mono text-[17px] font-semibold",
-                  green && "text-success",
-                )}
+                className={`font-mono text-[17px] font-semibold ${
+                  green ? "text-success" : ""
+                }`}
               >
                 {value}
               </div>
@@ -121,13 +97,6 @@ export function ViewVehicleDialog({
           <span className="font-mono text-[15px] font-bold">{completion}%</span>
         </div>
         <Tally filled={filled} />
-
-        <div className="mt-3.5 border-t border-dashed border-border pt-3 font-mono text-xs text-muted-foreground">
-          Projected finish, at current pace:{" "}
-          <b className="text-foreground">
-            {dateFormat.format(new Date(vehicle.projectedFinish))}
-          </b>
-        </div>
       </DialogContent>
     </Dialog>
   );

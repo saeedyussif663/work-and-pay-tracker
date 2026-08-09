@@ -32,3 +32,35 @@ export type AuthContextType = {
   setToken: (token: string | null, expiry?: Date) => void;
   isAuthenticated: boolean;
 };
+
+export type Vehicle = {
+  id: number;
+  name: string;
+  rider: string;
+  startDate: Date;
+  cost: number;
+  expectedReturn: number;
+  weeklyAmount: number;
+  expectedCompletionDate: null | Date;
+  createdAt: Date;
+  updatedAt: Date;
+  owner: string;
+  totalPaid: number;
+  amountRemaining: number;
+  projectedCompletionDate: Date;
+  status: "On track" | "Behind" | "Completed";
+};
+
+export interface VehicleResponse {
+  message: string;
+  data: Vehicle[];
+  metadata: ResponseMetadata;
+}
+
+type ResponseMetadata = {
+  currentPage: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+  numberOfPages: number;
+  total: number;
+};

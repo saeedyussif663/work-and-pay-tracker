@@ -21,11 +21,17 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import http, { successStyle } from "@/lib/http";
+import { queryClient } from "@/main";
+import type { Vehicle } from "@/types";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 const formSchema = z
   .object({
-    vehicle: z.string().min(3, "Vehicle name should be at least 3 characters."),
+    name: z.string().min(3, "Name should be at least 3 characters."),
     rider: z.string().min(3, "Rider name should be at least 3 characters."),
+    startDate: z.iso.date("Enter a valid start date."),
     cost: z.number().positive("Cost must be greater than 0."),
     expectedReturn: z
       .number()
@@ -49,18 +55,43 @@ export function AddVehicleDialog({ trigger }: AddVehicleDialogProps) {
   const form = useForm<AddVehicleFormInput>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      vehicle: "",
+      name: "",
       rider: "",
+      startDate: new Date().toISOString().slice(0, 10),
       cost: 0,
       expectedReturn: 0,
       weeklyAmount: 0,
     },
   });
 
+  async function addVehicle(data: AddVehicleFormInput) {
+    const res = await http.post<
+      { message: string; data: Vehicle },
+      AddVehicleFormInput
+    >("vehicles", data);
+
+    return res;
+  }
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: addVehicle,
+    onSuccess: (data) => {
+      if (!data) return;
+
+      toast.success(data.message, {
+        style: successStyle,
+      });
+
+      setOpen(false);
+
+      queryClient.invalidateQueries({
+        queryKey: ["vehicles"],
+      });
+    },
+  });
+
   function onSubmit(data: AddVehicleFormInput) {
-    console.log(data);
-    form.reset();
-    setOpen(false);
+    mutate(data);
   }
 
   return (
@@ -68,7 +99,10 @@ export function AddVehicleDialog({ trigger }: AddVehicleDialogProps) {
       open={open}
       onOpenChange={(next) => {
         setOpen(next);
-        if (!next) form.reset();
+
+        if (!next) {
+          form.reset();
+        }
       }}
     >
       <DialogTrigger asChild>
@@ -94,7 +128,7 @@ export function AddVehicleDialog({ trigger }: AddVehicleDialogProps) {
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <FieldGroup className="gap-3">
             <Controller
-              name="vehicle"
+              name="name"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid} className="gap-1">
@@ -110,6 +144,7 @@ export function AddVehicleDialog({ trigger }: AddVehicleDialogProps) {
                     aria-invalid={fieldState.invalid}
                     placeholder="TVS Bike — GT-4471-23"
                     autoComplete="off"
+                    disabled={isPending}
                   />
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
@@ -135,6 +170,33 @@ export function AddVehicleDialog({ trigger }: AddVehicleDialogProps) {
                     aria-invalid={fieldState.invalid}
                     placeholder="Kwame Mensah"
                     autoComplete="off"
+                    disabled={isPending}
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+
+            <Controller
+              name="startDate"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid} className="gap-1">
+                  <FieldLabel
+                    htmlFor="add-vehicle-start-date"
+                    className="font-mono text-xs uppercase tracking-wide text-foreground font-medium"
+                  >
+                    Start Date
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    id="add-vehicle-start-date"
+                    type="date"
+                    aria-invalid={fieldState.invalid}
+                    autoComplete="off"
+                    disabled={isPending}
                   />
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
@@ -163,6 +225,7 @@ export function AddVehicleDialog({ trigger }: AddVehicleDialogProps) {
                       aria-invalid={fieldState.invalid}
                       placeholder="9800"
                       autoComplete="off"
+                      disabled={isPending}
                       onChange={(e) => field.onChange(e.target.valueAsNumber)}
                     />
                     {fieldState.invalid && (
@@ -187,10 +250,10 @@ export function AddVehicleDialog({ trigger }: AddVehicleDialogProps) {
                       {...field}
                       id="add-vehicle-return"
                       type="number"
-
                       aria-invalid={fieldState.invalid}
                       placeholder="13200"
                       autoComplete="off"
+                      disabled={isPending}
                       onChange={(e) => field.onChange(e.target.valueAsNumber)}
                     />
                     {fieldState.invalid && (
@@ -220,6 +283,7 @@ export function AddVehicleDialog({ trigger }: AddVehicleDialogProps) {
                     aria-invalid={fieldState.invalid}
                     placeholder="220"
                     autoComplete="off"
+                    disabled={isPending}
                     onChange={(e) => field.onChange(e.target.valueAsNumber)}
                   />
                   {fieldState.invalid && (
@@ -236,10 +300,13 @@ export function AddVehicleDialog({ trigger }: AddVehicleDialogProps) {
               variant="outline"
               onClick={() => setOpen(false)}
               className="rounded-md"
+              disabled={isPending}
             >
               Cancel
             </Button>
-            <Button type="submit">Create vehicle</Button>
+            <Button type="submit" isLoading={isPending}>
+              Create vehicle
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>
