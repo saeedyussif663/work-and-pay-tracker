@@ -57,6 +57,35 @@ export interface VehicleResponse {
   metadata: ResponseMetadata;
 }
 
+export type Payment = {
+  id: number;
+  amount: number;
+  paidAt: string;
+  vehicleName: string;
+  riderName: string;
+};
+
+export interface PaymentsResponse {
+  message: string;
+  data: Payment[];
+  metadata: ResponseMetadata;
+}
+
+export interface CreatePaymentResponse {
+  message: string;
+  data: {
+    id: number;
+    amount: number;
+    paidAt: number;
+    vehicleName: string;
+    riderName: string;
+    totalPaid: number;
+    amountRemaining: number;
+    projectedCompletionDate: Date;
+    status: "On track" | "Behind" | "Completed";
+  };
+}
+
 type ResponseMetadata = {
   currentPage: number;
   hasNextPage: boolean;

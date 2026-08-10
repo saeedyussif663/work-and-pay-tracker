@@ -1,54 +1,12 @@
 import type { ColumnDef } from "@tanstack/react-table";
 
 import { AddPaymentDialog } from "@/components/add-payment";
+import { ReceiptDialog } from "@/components/receipt";
 import { DataTable } from "@/components/ui/data-table";
-
-type Payment = {
-  id: number;
-  amount: number;
-  paidAt: string;
-  vehicleName: string;
-  riderName: string;
-};
-
-const basePayments: Payment[] = [
-  {
-    id: 13,
-    amount: 800,
-    paidAt: "2026-08-03T21:16:16.159Z",
-    vehicleName: "Royal 125 X",
-    riderName: "Mohammed",
-  },
-  {
-    id: 12,
-    amount: 220,
-    paidAt: "2026-07-27T09:42:10.000Z",
-    vehicleName: "TVS Bike — GT-4471-23",
-    riderName: "Kwame Mensah",
-  },
-  {
-    id: 11,
-    amount: 350,
-    paidAt: "2026-07-24T14:05:00.000Z",
-    vehicleName: "Bajaj Tricycle — GT-5678-23",
-    riderName: "Abena Owusu",
-  },
-  {
-    id: 10,
-    amount: 150,
-    paidAt: "2026-07-20T11:30:00.000Z",
-    vehicleName: "Honda Motorbike — GW-9012-24",
-    riderName: "Yaw Boateng",
-  },
-];
-
-// Repeated to exercise pagination with mock data — ids stay unique per row.
-const payments: Payment[] = Array.from({ length: 5 }, (_, page) =>
-  basePayments.map((p, i) => ({
-    ...p,
-    id: page * basePayments.length + i + 1,
-  })),
-).flat();
+import http from "@/lib/http";
+import type { Payment, PaymentsResponse } from "@/types";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 
 const currency = new Intl.NumberFormat("en-GH", {
   style: "currency",
@@ -63,6 +21,9 @@ const dateTimeFormat = new Intl.DateTimeFormat("en-GH", {
   hour: "2-digit",
   minute: "2-digit",
 });
+
+const PAGE_SIZE = 10;
+const SEARCH_DEBOUNCE_MS = 300;
 
 const columns: ColumnDef<Payment>[] = [
   {
@@ -89,9 +50,49 @@ const columns: ColumnDef<Payment>[] = [
       </div>
     ),
   },
+  {
+    id: "actions",
+    header: () => <div className="text-right">Receipt</div>,
+    cell: ({ row }) => (
+      <div className="flex justify-end">
+        <ReceiptDialog payment={row.original} />
+      </div>
+    ),
+  },
 ];
 
 export default function Payments() {
+  const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [page, setPage] = useState(1);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setDebouncedSearch(search);
+      setPage(1);
+    }, SEARCH_DEBOUNCE_MS);
+    return () => clearTimeout(timeout);
+  }, [search]);
+
+  async function getPayments() {
+    const params = new URLSearchParams({
+      page: String(page),
+      limit: String(PAGE_SIZE),
+    });
+    if (debouncedSearch) params.set("search", debouncedSearch);
+
+    const res = await http.get<PaymentsResponse>(
+      `payments?${params.toString()}`,
+    );
+    return res;
+  }
+
+  const { data, isLoading } = useQuery({
+    queryFn: getPayments,
+    queryKey: ["payments", { page, search: debouncedSearch }],
+    placeholderData: keepPreviousData,
+  });
+
   return (
     <section className="pb-10">
       <div className="flex items-start justify-between gap-4">
@@ -108,7 +109,17 @@ export default function Payments() {
       <div className="mt-4">
         <DataTable
           columns={columns}
-          data={payments}
+          data={data?.data || []}
+          isLoading={isLoading}
+          searchValue={search}
+          onSearchChange={setSearch}
+          pagination={{
+            page: data?.metadata.currentPage ?? page,
+            pageCount: data?.metadata.numberOfPages ?? 1,
+            hasNextPage: data?.metadata.hasNextPage ?? false,
+            hasPreviousPage: data?.metadata.hasPreviousPage ?? false,
+            onPageChange: setPage,
+          }}
           toolbarAction={<AddPaymentDialog />}
           emptyState={{
             title: "No payments yet",

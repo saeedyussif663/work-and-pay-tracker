@@ -92,7 +92,6 @@ export default function Vehicles() {
     queryFn: getVehicles,
     queryKey: ["vehicles", { page, search: debouncedSearch }],
     placeholderData: keepPreviousData,
-    staleTime: 1000 * 60 * 5,
   });
 
   return (

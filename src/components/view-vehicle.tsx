@@ -11,6 +11,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import Tally from "@/components/ui/tally";
+import { cn } from "@/lib/utils";
 import type { Vehicle } from "@/types";
 
 const currency = new Intl.NumberFormat("en-GH", {
@@ -18,6 +19,18 @@ const currency = new Intl.NumberFormat("en-GH", {
   currency: "GHS",
   maximumFractionDigits: 0,
 });
+
+const dateFormat = new Intl.DateTimeFormat("en-GH", {
+  day: "2-digit",
+  month: "short",
+  year: "numeric",
+});
+
+const statusStyles: Record<Vehicle["status"], string> = {
+  "On track": "bg-success/10 text-success",
+  Behind: "bg-warning/10 text-warning",
+  Completed: "bg-muted text-muted-foreground",
+};
 
 interface ViewVehicleDialogProps {
   vehicle: Vehicle;
@@ -55,11 +68,21 @@ export function ViewVehicleDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="mb-4.5">
-          <h3 className="text-[19px] font-bold">{vehicle.name}</h3>
-          <div className="mt-1 font-mono text-xs text-muted-foreground">
-            Rider: {vehicle.rider}
+        <div className="mb-4.5 flex items-start justify-between gap-3">
+          <div>
+            <h3 className="text-[19px] font-bold">{vehicle.name}</h3>
+            <div className="mt-1 font-mono text-xs text-muted-foreground">
+              Rider: {vehicle.rider}
+            </div>
           </div>
+          <span
+            className={cn(
+              "whitespace-nowrap rounded-full px-3 py-1 font-mono text-[11px] uppercase tracking-wide",
+              statusStyles[vehicle.status],
+            )}
+          >
+            {vehicle.status}
+          </span>
         </div>
 
         <div className="mb-4.5 grid grid-cols-2 gap-x-5 gap-y-3.5">
@@ -80,9 +103,10 @@ export function ViewVehicleDialog({
                 {label}
               </div>
               <div
-                className={`font-mono text-[17px] font-semibold ${
-                  green ? "text-success" : ""
-                }`}
+                className={cn(
+                  "font-mono text-[17px] font-semibold",
+                  green && "text-success",
+                )}
               >
                 {value}
               </div>
@@ -97,6 +121,13 @@ export function ViewVehicleDialog({
           <span className="font-mono text-[15px] font-bold">{completion}%</span>
         </div>
         <Tally filled={filled} />
+
+        <div className="mt-3.5 border-t border-dashed border-border pt-3 font-mono text-xs text-muted-foreground">
+          Projected finish, at current pace:{" "}
+          <b className="text-foreground">
+            {dateFormat.format(new Date(vehicle.projectedCompletionDate))}
+          </b>
+        </div>
       </DialogContent>
     </Dialog>
   );

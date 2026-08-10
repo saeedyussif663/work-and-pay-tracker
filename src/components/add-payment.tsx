@@ -28,6 +28,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import http, { successStyle } from "@/lib/http";
+import { queryClient } from "@/main";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   vehicleId: z.string().min(1, "Select a vehicle."),
@@ -56,17 +60,41 @@ export function AddPaymentDialog({ trigger }: AddPaymentDialogProps) {
     },
   });
 
-  // Stand-in until vehicles are fetched from the API — mirrors Vehicles.tsx ids/names.
-  const vehicles = [
-    { id: "1", label: "TVS Bike — GT-4471-23" },
-    { id: "2", label: "Bajaj Tricycle — GT-5678-23" },
-    { id: "3", label: "Honda Motorbike — GW-9012-24" },
-  ];
+  const { data } = useQuery({
+    queryKey: ["vehicles", "list"],
+    queryFn: () =>
+      http.get<{ message: string; data: VehicleOption[] }>("vehicles/list"),
+  });
+  const vehicles = data?.data ?? [];
+
+  async function addPayment(data: AddPaymentFormInput) {
+    const res = await http.post<{ message: string }, { amount: number }>(
+      `payments/${data.vehicleId}`,
+      { amount: data.amount },
+    );
+
+    return res;
+  }
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: addPayment,
+    onSuccess: (data) => {
+      if (!data) return;
+
+      toast.success(data.message, {
+        style: successStyle,
+      });
+
+      setOpen(false);
+
+      queryClient.invalidateQueries({
+        queryKey: ["payments"],
+      });
+    },
+  });
 
   function onSubmit(data: AddPaymentFormInput) {
-    console.log(data);
-    form.reset();
-    setOpen(false);
+    mutate(data);
   }
 
   return (
@@ -74,7 +102,10 @@ export function AddPaymentDialog({ trigger }: AddPaymentDialogProps) {
       open={open}
       onOpenChange={(next) => {
         setOpen(next);
-        if (!next) form.reset();
+
+        if (!next) {
+          form.reset();
+        }
       }}
     >
       <DialogTrigger asChild>
@@ -91,6 +122,7 @@ export function AddPaymentDialog({ trigger }: AddPaymentDialogProps) {
           <DialogTitle className="font-heading text-lg font-bold tracking-tightest text-foreground">
             Add a payment
           </DialogTitle>
+
           <DialogDescription className="text-sm text-muted-foreground">
             Log a payment against a vehicle. It gets added to that vehicle's
             paid total right away.
@@ -110,7 +142,12 @@ export function AddPaymentDialog({ trigger }: AddPaymentDialogProps) {
                   >
                     Vehicle
                   </FieldLabel>
-                  <Select value={field.value} onValueChange={field.onChange}>
+
+                  <Select
+                    value={field.value}
+                    onValueChange={field.onChange}
+                    disabled={isPending}
+                  >
                     <SelectTrigger
                       id="add-payment-vehicle"
                       aria-invalid={fieldState.invalid}
@@ -118,14 +155,16 @@ export function AddPaymentDialog({ trigger }: AddPaymentDialogProps) {
                     >
                       <SelectValue placeholder="Select a vehicle" />
                     </SelectTrigger>
+
                     <SelectContent>
                       {vehicles.map((vehicle) => (
-                        <SelectItem key={vehicle.id} value={vehicle.id}>
+                        <SelectItem key={vehicle.id} value={String(vehicle.id)}>
                           {vehicle.label}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
+
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
                   )}
@@ -144,6 +183,7 @@ export function AddPaymentDialog({ trigger }: AddPaymentDialogProps) {
                   >
                     Amount (GHS)
                   </FieldLabel>
+
                   <Input
                     {...field}
                     id="add-payment-amount"
@@ -152,8 +192,10 @@ export function AddPaymentDialog({ trigger }: AddPaymentDialogProps) {
                     aria-invalid={fieldState.invalid}
                     placeholder="220"
                     autoComplete="off"
+                    disabled={isPending}
                     onChange={(e) => field.onChange(e.target.valueAsNumber)}
                   />
+
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
                   )}
@@ -168,10 +210,14 @@ export function AddPaymentDialog({ trigger }: AddPaymentDialogProps) {
               variant="outline"
               onClick={() => setOpen(false)}
               className="rounded-md"
+              disabled={isPending}
             >
               Cancel
             </Button>
-            <Button type="submit">Log payment</Button>
+
+            <Button type="submit" isLoading={isPending}>
+              Log payment
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>
