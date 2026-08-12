@@ -4,6 +4,7 @@ import { useState, type ReactNode } from "react";
 import { Controller, useForm } from "react-hook-form";
 import z from "zod/v4";
 
+import { ReceiptDialog } from "@/components/receipt";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -30,6 +31,7 @@ import {
 } from "@/components/ui/select";
 import http, { successStyle } from "@/lib/http";
 import { queryClient } from "@/main";
+import type { PaymentDetail } from "@/types";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -51,6 +53,10 @@ interface AddPaymentDialogProps {
 
 export function AddPaymentDialog({ trigger }: AddPaymentDialogProps) {
   const [open, setOpen] = useState(false);
+  const [createdPayment, setCreatedPayment] = useState<PaymentDetail | null>(
+    null,
+  );
+  const [receiptOpen, setReceiptOpen] = useState(false);
 
   const form = useForm<AddPaymentFormInput>({
     resolver: zodResolver(formSchema),
@@ -68,28 +74,32 @@ export function AddPaymentDialog({ trigger }: AddPaymentDialogProps) {
   const vehicles = data?.data ?? [];
 
   async function addPayment(data: AddPaymentFormInput) {
-    const res = await http.post<{ message: string }, { amount: number }>(
-      `payments/${data.vehicleId}`,
-      { amount: data.amount },
-    );
+    const res = await http.post<
+      { message: string; data: PaymentDetail },
+      { amount: number }
+    >(`payments/${data.vehicleId}`, { amount: data.amount });
 
     return res;
   }
 
   const { mutate, isPending } = useMutation({
     mutationFn: addPayment,
-    onSuccess: (data) => {
-      if (!data) return;
+    onSuccess: (res) => {
+      if (!res) return;
 
-      toast.success(data.message, {
+      toast.success(res.message, {
         style: successStyle,
       });
 
       setOpen(false);
+      form.reset();
 
       queryClient.invalidateQueries({
         queryKey: ["payments"],
       });
+
+      setCreatedPayment(res.data);
+      setReceiptOpen(true);
     },
   });
 
@@ -98,129 +108,143 @@ export function AddPaymentDialog({ trigger }: AddPaymentDialogProps) {
   }
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={(next) => {
-        setOpen(next);
+    <>
+      <Dialog
+        open={open}
+        onOpenChange={(next) => {
+          setOpen(next);
 
-        if (!next) {
-          form.reset();
-        }
-      }}
-    >
-      <DialogTrigger asChild>
-        {trigger ?? (
-          <Button size="lg">
-            <PlusIcon />
-            Add payment
-          </Button>
-        )}
-      </DialogTrigger>
+          if (!next) {
+            form.reset();
+          }
+        }}
+      >
+        <DialogTrigger asChild>
+          {trigger ?? (
+            <Button size="lg">
+              <PlusIcon />
+              Add payment
+            </Button>
+          )}
+        </DialogTrigger>
 
-      <DialogContent className="sm:max-w-105 rounded-md">
-        <DialogHeader>
-          <DialogTitle className="font-heading text-lg font-bold tracking-tightest text-foreground">
-            Add a payment
-          </DialogTitle>
+        <DialogContent className="sm:max-w-105 rounded-md">
+          <DialogHeader>
+            <DialogTitle className="font-heading text-lg font-bold tracking-tightest text-foreground">
+              Add a payment
+            </DialogTitle>
 
-          <DialogDescription className="text-sm text-muted-foreground">
-            Log a payment against a vehicle. It gets added to that vehicle's
-            paid total right away.
-          </DialogDescription>
-        </DialogHeader>
+            <DialogDescription className="text-sm text-muted-foreground">
+              Log a payment against a vehicle. It gets added to that vehicle's
+              paid total right away.
+            </DialogDescription>
+          </DialogHeader>
 
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <FieldGroup className="gap-3">
-            <Controller
-              name="vehicleId"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid} className="gap-1">
-                  <FieldLabel
-                    htmlFor="add-payment-vehicle"
-                    className="font-mono text-xs uppercase tracking-wide text-foreground font-medium"
-                  >
-                    Vehicle
-                  </FieldLabel>
-
-                  <Select
-                    value={field.value}
-                    onValueChange={field.onChange}
-                    disabled={isPending}
-                  >
-                    <SelectTrigger
-                      id="add-payment-vehicle"
-                      aria-invalid={fieldState.invalid}
-                      className="w-full"
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <FieldGroup className="gap-3">
+              <Controller
+                name="vehicleId"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid} className="gap-1">
+                    <FieldLabel
+                      htmlFor="add-payment-vehicle"
+                      className="font-mono text-xs uppercase tracking-wide text-foreground font-medium"
                     >
-                      <SelectValue placeholder="Select a vehicle" />
-                    </SelectTrigger>
+                      Vehicle
+                    </FieldLabel>
 
-                    <SelectContent>
-                      {vehicles.map((vehicle) => (
-                        <SelectItem key={vehicle.id} value={String(vehicle.id)}>
-                          {vehicle.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                    <Select
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      disabled={isPending}
+                    >
+                      <SelectTrigger
+                        id="add-payment-vehicle"
+                        aria-invalid={fieldState.invalid}
+                        className="w-full"
+                      >
+                        <SelectValue placeholder="Select a vehicle" />
+                      </SelectTrigger>
 
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
+                      <SelectContent>
+                        {vehicles.map((vehicle) => (
+                          <SelectItem
+                            key={vehicle.id}
+                            value={String(vehicle.id)}
+                          >
+                            {vehicle.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
 
-            <Controller
-              name="amount"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid} className="gap-1">
-                  <FieldLabel
-                    htmlFor="add-payment-amount"
-                    className="font-mono text-xs uppercase tracking-wide text-foreground font-medium"
-                  >
-                    Amount (GHS)
-                  </FieldLabel>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
 
-                  <Input
-                    {...field}
-                    id="add-payment-amount"
-                    type="number"
-                    min={0}
-                    aria-invalid={fieldState.invalid}
-                    placeholder="220"
-                    autoComplete="off"
-                    disabled={isPending}
-                    onChange={(e) => field.onChange(e.target.valueAsNumber)}
-                  />
+              <Controller
+                name="amount"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid} className="gap-1">
+                    <FieldLabel
+                      htmlFor="add-payment-amount"
+                      className="font-mono text-xs uppercase tracking-wide text-foreground font-medium"
+                    >
+                      Amount (GHS)
+                    </FieldLabel>
 
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-          </FieldGroup>
+                    <Input
+                      {...field}
+                      id="add-payment-amount"
+                      type="number"
+                      min={0}
+                      aria-invalid={fieldState.invalid}
+                      placeholder="220"
+                      autoComplete="off"
+                      disabled={isPending}
+                      onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                    />
 
-          <DialogFooter className="mt-5">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setOpen(false)}
-              className="rounded-md"
-              disabled={isPending}
-            >
-              Cancel
-            </Button>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+            </FieldGroup>
 
-            <Button type="submit" isLoading={isPending}>
-              Log payment
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+            <DialogFooter className="mt-5">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setOpen(false)}
+                className="rounded-md"
+                disabled={isPending}
+              >
+                Cancel
+              </Button>
+
+              <Button type="submit" isLoading={isPending}>
+                Log payment
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {createdPayment && (
+        <ReceiptDialog
+          payment={createdPayment}
+          trigger={null}
+          open={receiptOpen}
+          onOpenChange={setReceiptOpen}
+        />
+      )}
+    </>
   );
 }

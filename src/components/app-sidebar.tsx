@@ -34,7 +34,7 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarHeader>
         <div className="flex items-center gap-2.5 px-2 py-3">
-          <img src="/icon.png" alt="Work&Pay icon" className="size-6" />
+          {/* <img src="/icon.png" alt="Work&Pay icon" className="size-6" /> */}
           <div className="flex items-center gap-1 font-mono text-[15px] font-semibold tracking-wide text-foreground">
             <span className="text-primary">[</span>
             WORK / PAY

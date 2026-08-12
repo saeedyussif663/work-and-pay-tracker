@@ -21,7 +21,7 @@
     "@usenavii/react": "^0.9.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "html2canvas": "^1.4.1",
+    "html2canvas-pro": "^2.3.3",
     "js-cookie": "^3.0.8",
     "jspdf": "^4.2.1",
     "lucide-react": "^1.17.0",

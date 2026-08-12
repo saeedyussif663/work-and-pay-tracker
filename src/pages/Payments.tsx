@@ -1,7 +1,6 @@
 import type { ColumnDef } from "@tanstack/react-table";
 
 import { AddPaymentDialog } from "@/components/add-payment";
-import { ReceiptDialog } from "@/components/receipt";
 import { DataTable } from "@/components/ui/data-table";
 import http from "@/lib/http";
 import type { Payment, PaymentsResponse } from "@/types";
@@ -47,15 +46,6 @@ const columns: ColumnDef<Payment>[] = [
     cell: ({ row }) => (
       <div className="text-right font-mono text-xs text-muted-foreground">
         {dateTimeFormat.format(new Date(row.original.paidAt))}
-      </div>
-    ),
-  },
-  {
-    id: "actions",
-    header: () => <div className="text-right">Receipt</div>,
-    cell: ({ row }) => (
-      <div className="flex justify-end">
-        <ReceiptDialog payment={row.original} />
       </div>
     ),
   },

@@ -65,6 +65,13 @@ export type Payment = {
   riderName: string;
 };
 
+export interface PaymentDetail extends Payment {
+  totalPaid: number;
+  amountRemaining: number;
+  projectedCompletionDate: string;
+  status: string;
+}
+
 export interface PaymentsResponse {
   message: string;
   data: Payment[];
