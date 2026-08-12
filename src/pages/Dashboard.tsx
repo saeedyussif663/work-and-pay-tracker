@@ -4,7 +4,7 @@ import {
 } from "@/components/dashboard-card";
 import {
   MonthlyPaymentsChart,
-  type MonthlyPayment,
+  MonthlyPaymentsChartSkeleton,
 } from "@/components/monthly-payments-chart";
 import {
   RecentActivity,
@@ -14,7 +14,7 @@ import {
   RiderComparisonChart,
   type RiderStat,
 } from "@/components/rider-comparison-chart";
-import { getDashboardStats } from "@/lib/dashboard";
+import { getDashboardStats, getMonthlyPayments } from "@/lib/dashboard";
 import { useQuery } from "@tanstack/react-query";
 
 const DASHBOARD_CARD_COUNT = 4;
@@ -44,15 +44,6 @@ const riderStats: RiderStat[] = [
     completionPct: 22,
     status: "Behind",
   },
-];
-
-const monthlyPayments: MonthlyPayment[] = [
-  { month: "2026-02", total: 3200 },
-  { month: "2026-03", total: 4100 },
-  { month: "2026-04", total: 3800 },
-  { month: "2026-05", total: 5200 },
-  { month: "2026-06", total: 4600 },
-  { month: "2026-07", total: 5900 },
 ];
 
 const recentActivity: PaymentActivity[] = [
@@ -92,6 +83,12 @@ export default function Dashboard() {
     queryFn: getDashboardStats,
   });
 
+  const { data: monthlyPayments, isLoading: isMonthlyPaymentsLoading } =
+    useQuery({
+      queryKey: ["monthly-payments"],
+      queryFn: getMonthlyPayments,
+    });
+
   return (
     <section className="pb-10">
       <div>
@@ -119,7 +116,11 @@ export default function Dashboard() {
       </div>
 
       <div className="mt-6">
-        <MonthlyPaymentsChart data={monthlyPayments} />
+        {isMonthlyPaymentsLoading ? (
+          <MonthlyPaymentsChartSkeleton />
+        ) : (
+          <MonthlyPaymentsChart data={monthlyPayments || []} />
+        )}
       </div>
 
       <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">

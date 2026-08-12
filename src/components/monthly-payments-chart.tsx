@@ -58,6 +58,27 @@ function CustomTooltip({
   );
 }
 
+export function MonthlyPaymentsChartSkeleton() {
+  const barHeights = [38, 62, 45, 80, 55, 70, 48, 90, 60, 40, 75, 52];
+
+  return (
+    <div className="rounded-lg border border-border bg-card p-5">
+      <div className="h-4 w-40 animate-pulse rounded bg-muted" />
+      <div className="mt-2 h-3 w-52 animate-pulse rounded bg-muted" />
+
+      <div className="mt-4 flex h-56 items-end gap-2 border-b border-border pb-0">
+        {barHeights.map((h, i) => (
+          <div
+            key={i}
+            className="flex-1 animate-pulse rounded-t-sm bg-muted"
+            style={{ height: `${h}%`, animationDelay: `${i * 60}ms` }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 interface MonthlyPaymentsChartProps {
   data: MonthlyPayment[];
 }

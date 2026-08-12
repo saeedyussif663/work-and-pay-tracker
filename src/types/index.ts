@@ -113,3 +113,10 @@ export interface DashboardStatsResponse {
   message: string;
   data: Stat[];
 }
+
+interface MonthlyPayment {
+  month: string;
+  total: number;
+}
+
+export type MonthlyPaymentResponse = MonthlyPayment[];
