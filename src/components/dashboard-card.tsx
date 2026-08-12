@@ -1,3 +1,5 @@
+import { Skeleton } from "@/components/ui/skeleton";
+
 type DashboardCardProps = {
   label: string;
   value: number;
@@ -28,6 +30,15 @@ export function DashboardCard({
       <p className="mt-1.5 font-mono text-xl font-semibold text-foreground md:text-2xl">
         {formatValue(value, format)}
       </p>
+    </div>
+  );
+}
+
+export function DashboardCardSkeleton() {
+  return (
+    <div className="rounded-lg border border-border bg-card p-4 md:p-5">
+      <Skeleton className="h-3 w-20" />
+      <Skeleton className="mt-2.5 h-6 w-28 md:h-7" />
     </div>
   );
 }

@@ -1,16 +1,11 @@
-import { DashboardCard } from "@/components/dashboard-card";
 import {
-  ExpectedVsActualChart,
-  type CumulativePoint,
-} from "@/components/expected-vs-actual-chart";
+  DashboardCard,
+  DashboardCardSkeleton,
+} from "@/components/dashboard-card";
 import {
   MonthlyPaymentsChart,
   type MonthlyPayment,
 } from "@/components/monthly-payments-chart";
-import {
-  PortfolioStatusChart,
-  type StatusBreakdown,
-} from "@/components/portfolio-status-chart";
 import {
   RecentActivity,
   type PaymentActivity,
@@ -19,13 +14,10 @@ import {
   RiderComparisonChart,
   type RiderStat,
 } from "@/components/rider-comparison-chart";
+import { getDashboardStats } from "@/lib/dashboard";
+import { useQuery } from "@tanstack/react-query";
 
-const stats = [
-  { label: "Total Vehicles", value: 0, format: "number" as const },
-  { label: "Total Payments", value: 0, format: "currency" as const },
-  { label: "Expected Return", value: 0, format: "currency" as const },
-  { label: "Total Cost", value: 0, format: "currency" as const },
-];
+const DASHBOARD_CARD_COUNT = 4;
 
 const riderStats: RiderStat[] = [
   {
@@ -63,21 +55,6 @@ const monthlyPayments: MonthlyPayment[] = [
   { month: "2026-07", total: 5900 },
 ];
 
-const statusBreakdown: StatusBreakdown[] = [
-  { status: "On track", count: 7 },
-  { status: "Behind", count: 2 },
-  { status: "Completed", count: 3 },
-];
-
-const cumulative: CumulativePoint[] = [
-  { month: "2026-02", expected: 4000, actual: 3200 },
-  { month: "2026-03", expected: 8200, actual: 7300 },
-  { month: "2026-04", expected: 12500, actual: 11100 },
-  { month: "2026-05", expected: 17000, actual: 16300 },
-  { month: "2026-06", expected: 21600, actual: 20900 },
-  { month: "2026-07", expected: 26400, actual: 26800 },
-];
-
 const recentActivity: PaymentActivity[] = [
   {
     id: "1",
@@ -110,6 +87,11 @@ const recentActivity: PaymentActivity[] = [
 ];
 
 export default function Dashboard() {
+  const { data: stats, isLoading } = useQuery({
+    queryKey: ["dashboard-cards"],
+    queryFn: getDashboardStats,
+  });
+
   return (
     <section className="pb-10">
       <div>
@@ -122,27 +104,26 @@ export default function Dashboard() {
       </div>
 
       <div className="mt-4 grid w-full grid-cols-1 gap-4 md:grid-cols-4 md:gap-6">
-        {stats.map((stat, i) => (
-          <DashboardCard
-            key={i}
-            label={stat.label}
-            value={stat.value}
-            format={stat.format}
-          />
-        ))}
+        {isLoading
+          ? Array.from({ length: DASHBOARD_CARD_COUNT }).map((_, i) => (
+              <DashboardCardSkeleton key={i} />
+            ))
+          : stats?.map((stat, i) => (
+              <DashboardCard
+                key={i}
+                label={stat.label}
+                value={stat.value}
+                format={stat.format}
+              />
+            ))}
+      </div>
+
+      <div className="mt-6">
+        <MonthlyPaymentsChart data={monthlyPayments} />
       </div>
 
       <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
         <RiderComparisonChart data={riderStats} />
-        <MonthlyPaymentsChart data={monthlyPayments} />
-      </div>
-
-      <div className="mt-6">
-        <ExpectedVsActualChart data={cumulative} />
-      </div>
-
-      <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <PortfolioStatusChart data={statusBreakdown} />
         <RecentActivity data={recentActivity} />
       </div>
     </section>

@@ -100,3 +100,16 @@ type ResponseMetadata = {
   numberOfPages: number;
   total: number;
 };
+
+type StatFormat = "number" | "currency";
+
+type Stat = {
+  label: string;
+  value: number;
+  format: StatFormat;
+};
+
+export interface DashboardStatsResponse {
+  message: string;
+  data: Stat[];
+}
