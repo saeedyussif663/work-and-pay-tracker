@@ -3,8 +3,7 @@ export type PaymentActivity = {
   riderName: string;
   vehicleName: string;
   amount: number;
-  /** ISO timestamp */
-  timestamp: string;
+  paidAt: string;
 };
 
 const currency = new Intl.NumberFormat("en-GH", {
@@ -36,6 +35,48 @@ function formatWhen(iso: string, now = Date.now()) {
 
 interface RecentActivityProps {
   data: PaymentActivity[];
+}
+
+export function RecentActivitySkeleton() {
+  const rows = 4;
+
+  return (
+    <div className="rounded-lg border border-border bg-card p-5">
+      <div className="h-4 w-36 animate-pulse rounded bg-muted" />
+      <div className="mt-2 h-3 w-40 animate-pulse rounded bg-muted" />
+
+      <ul className="mt-4 divide-y divide-border">
+        {Array.from({ length: rows }).map((_, i) => (
+          <li
+            key={i}
+            className="flex items-center gap-3 py-3 first:pt-0 last:pb-0"
+          >
+            <span className="size-1.5 shrink-0 rounded-full bg-muted" />
+            <div className="min-w-0 flex-1 space-y-1.5">
+              <div
+                className="h-3.5 w-28 animate-pulse rounded bg-muted"
+                style={{ animationDelay: `${i * 60}ms` }}
+              />
+              <div
+                className="h-3 w-40 animate-pulse rounded bg-muted"
+                style={{ animationDelay: `${i * 60}ms` }}
+              />
+            </div>
+            <div className="shrink-0 space-y-1.5 text-right">
+              <div
+                className="ml-auto h-3.5 w-14 animate-pulse rounded bg-muted"
+                style={{ animationDelay: `${i * 60}ms` }}
+              />
+              <div
+                className="ml-auto h-3 w-10 animate-pulse rounded bg-muted"
+                style={{ animationDelay: `${i * 60}ms` }}
+              />
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 }
 
 export function RecentActivity({ data }: RecentActivityProps) {
@@ -75,7 +116,7 @@ export function RecentActivity({ data }: RecentActivityProps) {
                   {currency.format(entry.amount)}
                 </p>
                 <p className="font-mono text-xs text-muted-foreground">
-                  {formatWhen(entry.timestamp)}
+                  {formatWhen(entry.paidAt)}
                 </p>
               </div>
             </li>

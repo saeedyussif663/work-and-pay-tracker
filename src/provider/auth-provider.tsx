@@ -1,12 +1,8 @@
 import { useEffect, useState } from "react";
 
-import {
-  TOKEN_KEY,
-  USER_KEY,
-  type AuthContextType,
-  type User,
-} from "@/context/auth-constants";
+import { TOKEN_KEY, USER_KEY } from "@/context/auth-constants";
 import { AuthContext } from "@/context/auth-context";
+import type { AuthContextType, User } from "@/types";
 import { default as cookie } from "../lib/token";
 
 export const AuthProvider: React.FC<{

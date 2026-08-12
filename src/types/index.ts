@@ -1,3 +1,5 @@
+import type { RiderStat } from "@/components/dashboard/rider-comparison-chart";
+
 export interface SignupResponse {
   message: string;
   data: {
@@ -120,3 +122,8 @@ interface MonthlyPayment {
 }
 
 export type MonthlyPaymentResponse = MonthlyPayment[];
+
+export interface RiderStatsResponse {
+  message: string;
+  data: RiderStat[];
+}

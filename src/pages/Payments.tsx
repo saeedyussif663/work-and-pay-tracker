@@ -1,6 +1,6 @@
 import type { ColumnDef } from "@tanstack/react-table";
 
-import { AddPaymentDialog } from "@/components/add-payment";
+import { AddPaymentDialog } from "@/components/payments/add-payment";
 import { DataTable } from "@/components/ui/data-table";
 import http from "@/lib/http";
 import type { Payment, PaymentsResponse } from "@/types";

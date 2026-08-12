@@ -1,81 +1,28 @@
 import {
   DashboardCard,
   DashboardCardSkeleton,
-} from "@/components/dashboard-card";
+} from "@/components/dashboard/dashboard-card";
 import {
   MonthlyPaymentsChart,
   MonthlyPaymentsChartSkeleton,
-} from "@/components/monthly-payments-chart";
+} from "@/components/dashboard/monthly-payments-chart";
 import {
   RecentActivity,
-  type PaymentActivity,
-} from "@/components/recent-activity";
+  RecentActivitySkeleton,
+} from "@/components/dashboard/recent-activity";
 import {
   RiderComparisonChart,
-  type RiderStat,
-} from "@/components/rider-comparison-chart";
-import { getDashboardStats, getMonthlyPayments } from "@/lib/dashboard";
+  RiderComparisonChartSkeleton,
+} from "@/components/dashboard/rider-comparison-chart";
+import {
+  getDashboardStats,
+  getMonthlyPayments,
+  getRecentPayments,
+  getRiderStats,
+} from "@/lib/dashboard";
 import { useQuery } from "@tanstack/react-query";
 
 const DASHBOARD_CARD_COUNT = 4;
-
-const riderStats: RiderStat[] = [
-  {
-    riderId: "1",
-    riderName: "Kwame Mensah",
-    totalExpectedReturn: 13200,
-    totalPaid: 8140,
-    completionPct: 62,
-    status: "On track",
-  },
-  {
-    riderId: "2",
-    riderName: "Abena Owusu",
-    totalExpectedReturn: 19000,
-    totalPaid: 19000,
-    completionPct: 100,
-    status: "Completed",
-  },
-  {
-    riderId: "3",
-    riderName: "Yaw Boateng",
-    totalExpectedReturn: 9500,
-    totalPaid: 2100,
-    completionPct: 22,
-    status: "Behind",
-  },
-];
-
-const recentActivity: PaymentActivity[] = [
-  {
-    id: "1",
-    riderName: "Kwame Mensah",
-    vehicleName: "TVS Bike — GT-4471-23",
-    amount: 220,
-    timestamp: "2026-08-06T09:14:00Z",
-  },
-  {
-    id: "2",
-    riderName: "Abena Owusu",
-    vehicleName: "Bajaj Tricycle — GT-5678-23",
-    amount: 350,
-    timestamp: "2026-08-05T15:40:00Z",
-  },
-  {
-    id: "3",
-    riderName: "Yaw Boateng",
-    vehicleName: "Honda Motorbike — GW-9012-24",
-    amount: 150,
-    timestamp: "2026-08-03T11:02:00Z",
-  },
-  {
-    id: "4",
-    riderName: "Kwame Mensah",
-    vehicleName: "TVS Bike — GT-4471-23",
-    amount: 220,
-    timestamp: "2026-07-30T09:05:00Z",
-  },
-];
 
 export default function Dashboard() {
   const { data: stats, isLoading } = useQuery({
@@ -88,6 +35,18 @@ export default function Dashboard() {
       queryKey: ["monthly-payments"],
       queryFn: getMonthlyPayments,
     });
+
+  const { data: riderStats, isLoading: isRiderStatsLoading } = useQuery({
+    queryKey: ["rider-stats"],
+    queryFn: getRiderStats,
+  });
+
+  const { data: recentActivity, isLoading: isRecentActivityLoading } = useQuery(
+    {
+      queryKey: ["recent-payments"],
+      queryFn: getRecentPayments,
+    },
+  );
 
   return (
     <section className="pb-10">
@@ -115,7 +74,12 @@ export default function Dashboard() {
             ))}
       </div>
 
-      <div className="mt-6">
+      <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
+        {isRecentActivityLoading ? (
+          <RecentActivitySkeleton />
+        ) : (
+          <RecentActivity data={recentActivity || []} />
+        )}
         {isMonthlyPaymentsLoading ? (
           <MonthlyPaymentsChartSkeleton />
         ) : (
@@ -123,9 +87,12 @@ export default function Dashboard() {
         )}
       </div>
 
-      <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <RiderComparisonChart data={riderStats} />
-        <RecentActivity data={recentActivity} />
+      <div className="mt-6">
+        {isRiderStatsLoading ? (
+          <RiderComparisonChartSkeleton />
+        ) : (
+          <RiderComparisonChart data={riderStats?.data || []} />
+        )}{" "}
       </div>
     </section>
   );

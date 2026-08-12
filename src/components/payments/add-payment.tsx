@@ -4,7 +4,7 @@ import { useState, type ReactNode } from "react";
 import { Controller, useForm } from "react-hook-form";
 import z from "zod/v4";
 
-import { ReceiptDialog } from "@/components/receipt";
+import { ReceiptDialog } from "@/components/payments/receipt";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,

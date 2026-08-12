@@ -1,9 +1,9 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { useEffect, useState } from "react";
 
-import { AddVehicleDialog } from "@/components/add-vehicle";
 import { DataTable } from "@/components/ui/data-table";
-import { ViewVehicleDialog } from "@/components/view-vehicle";
+import { AddVehicleDialog } from "@/components/vehicles/add-vehicle";
+import { ViewVehicleDialog } from "@/components/vehicles/view-vehicle";
 import http from "@/lib/http";
 import type { Vehicle, VehicleResponse } from "@/types";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";

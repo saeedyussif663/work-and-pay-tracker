@@ -58,6 +58,38 @@ interface RiderComparisonChartProps {
   data: RiderStat[];
 }
 
+export function RiderComparisonChartSkeleton() {
+  // Varied widths so the skeleton reads as "bars of different lengths"
+  // rather than a uniform block, plus a couple of narrow ones to hint
+  // at the low performers the real chart sorts to the top.
+  const barWidths = [22, 48, 65, 40, 88];
+
+  return (
+    <div className="rounded-lg border border-border bg-card p-5">
+      <div className="h-4 w-44 animate-pulse rounded bg-muted" />
+      <div className="mt-2 h-3 w-56 animate-pulse rounded bg-muted" />
+
+      <div
+        className="mt-4 flex flex-col justify-between gap-3 border-l border-border pl-4"
+        style={{ height: Math.max(barWidths.length * 44, 160) }}
+      >
+        {barWidths.map((w, i) => (
+          <div key={i} className="flex items-center gap-3">
+            <div
+              className="h-3 shrink-0 animate-pulse rounded bg-muted"
+              style={{ width: 72, animationDelay: `${i * 60}ms` }}
+            />
+            <div
+              className="h-5 animate-pulse rounded-sm bg-muted"
+              style={{ width: `${w}%`, animationDelay: `${i * 60}ms` }}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function RiderComparisonChart({ data }: RiderComparisonChartProps) {
   const sorted = [...data].sort((a, b) => a.completionPct - b.completionPct);
   const height = Math.max(sorted.length * 44, 160);
