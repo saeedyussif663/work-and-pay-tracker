@@ -14,7 +14,7 @@ const router = createBrowserRouter([
     path: "/",
     element: <h1>Hello</h1>,
     loader: () => {
-      throw redirect("/signin");
+      throw redirect("/dashboard");
     },
   },
   {
