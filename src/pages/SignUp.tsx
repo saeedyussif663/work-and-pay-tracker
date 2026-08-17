@@ -76,7 +76,7 @@ export default function SignUp() {
           </Link>
         </div>
       </article>
-      <article className="w-full space-y-6 mt-1.5">
+      {/* <article className="w-full space-y-6 mt-1.5">
         <div className="cursor-pointer w-full py-2 flex gap-2 items-center text-foreground font-mono text-xs uppercase tracking-wide font-medium justify-center bg-card border border-border rounded-lg hover:bg-muted transition-colors">
           <img src="/google-logo.png" alt="google-logo" className="size-3" />
           Continue with Google
@@ -89,7 +89,7 @@ export default function SignUp() {
           </p>
           <div className="flex-1 h-px bg-border"></div>
         </div>
-      </article>
+      </article> */}
       <form
         id="signup"
         className="w-full"
