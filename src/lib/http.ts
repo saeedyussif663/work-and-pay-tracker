@@ -42,8 +42,17 @@ async function handleErrors(response: Response): Promise<null | undefined> {
   }
 
   if (!response.ok) {
+    if (Array.isArray(res.message)) {
+      res.message.forEach((error: unknown): void => {
+        toast.error(error as string, {
+          style: errorStyle,
+        });
+      });
+      return;
+    }
+
     if (res.errors && typeof res.errors === "object") {
-      const errors = Object.values(res.errors).flat();
+      const errors = Object.values(res.message).flat();
       errors.forEach((error: unknown): void => {
         toast.error(error as string, {
           style: errorStyle,
