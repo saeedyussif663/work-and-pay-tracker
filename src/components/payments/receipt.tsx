@@ -165,6 +165,12 @@ export function ReceiptDialog({
                     dateTimeFormat.format(new Date(payment.paidAt)),
                     false,
                   ],
+                  ["Total Paid", currency.format(payment.totalPaid), true],
+                  [
+                    "Amount Remaining",
+                    currency.format(payment.amountRemaining),
+                    true,
+                  ],
                 ] as const
               ).map(([label, value, green]) => (
                 <div
