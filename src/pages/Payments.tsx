@@ -2,8 +2,8 @@ import type { ColumnDef } from "@tanstack/react-table";
 
 import { AddPaymentDialog } from "@/components/payments/add-payment";
 import { DataTable } from "@/components/ui/data-table";
-import http from "@/lib/http";
-import type { Payment, PaymentsResponse } from "@/types";
+import { getPayments } from "@/lib/payments";
+import type { Payment } from "@/types";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
@@ -64,21 +64,13 @@ export default function Payments() {
     return () => clearTimeout(timeout);
   }, [search]);
 
-  async function getPayments() {
-    const params = new URLSearchParams({
-      page: String(page),
-      limit: String(PAGE_SIZE),
-    });
-    if (debouncedSearch) params.set("search", debouncedSearch);
-
-    const res = await http.get<PaymentsResponse>(
-      `payments?${params.toString()}`,
-    );
-    return res;
-  }
-
   const { data, isLoading } = useQuery({
-    queryFn: getPayments,
+    queryFn: () =>
+      getPayments({
+        page,
+        limit: PAGE_SIZE,
+        search: debouncedSearch,
+      }),
     queryKey: ["payments", { page, search: debouncedSearch }],
     placeholderData: keepPreviousData,
   });

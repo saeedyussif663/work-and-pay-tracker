@@ -29,7 +29,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import http, { successStyle } from "@/lib/http";
+import { successStyle } from "@/lib/http";
+import { addPayment, getPaymentVehicleOptions } from "@/lib/payments";
 import { queryClient } from "@/main";
 import type { PaymentDetail } from "@/types";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -42,10 +43,7 @@ const formSchema = z.object({
 
 type AddPaymentFormInput = z.input<typeof formSchema>;
 
-export interface VehicleOption {
-  id: string;
-  label: string;
-}
+export type { VehicleOption } from "@/types";
 
 interface AddPaymentDialogProps {
   trigger?: ReactNode;
@@ -68,19 +66,9 @@ export function AddPaymentDialog({ trigger }: AddPaymentDialogProps) {
 
   const { data } = useQuery({
     queryKey: ["vehicles", "list"],
-    queryFn: () =>
-      http.get<{ message: string; data: VehicleOption[] }>("vehicles/list"),
+    queryFn: getPaymentVehicleOptions,
   });
   const vehicles = data?.data ?? [];
-
-  async function addPayment(data: AddPaymentFormInput) {
-    const res = await http.post<
-      { message: string; data: PaymentDetail },
-      { amount: number }
-    >(`payments/${data.vehicleId}`, { amount: data.amount });
-
-    return res;
-  }
 
   const { mutate, isPending } = useMutation({
     mutationFn: addPayment,

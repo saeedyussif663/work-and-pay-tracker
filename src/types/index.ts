@@ -80,6 +80,22 @@ export interface PaymentsResponse {
   metadata: ResponseMetadata;
 }
 
+export interface GetPaymentsParams {
+  page: number;
+  limit: number;
+  search?: string;
+}
+
+export interface AddPaymentInput {
+  vehicleId: string;
+  amount: number;
+}
+
+export interface VehicleOption {
+  id: string;
+  label: string;
+}
+
 export interface CreatePaymentResponse {
   message: string;
   data: {
