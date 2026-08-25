@@ -34,12 +34,16 @@ const statusStyles: Record<Vehicle["status"], string> = {
 
 interface ViewVehicleDialogProps {
   vehicle: Vehicle;
-  trigger?: ReactNode;
+  trigger?: ReactNode | null;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 export function ViewVehicleDialog({
   vehicle,
   trigger,
+  open,
+  onOpenChange,
 }: ViewVehicleDialogProps) {
   const remaining = vehicle.expectedReturn - vehicle.totalPaid;
   const completion = Math.min(
@@ -50,14 +54,16 @@ export function ViewVehicleDialog({
   const filled = Math.round(completion / 10);
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        {trigger ?? (
-          <Button variant="ghost" size="icon" aria-label="View details">
-            <EyeIcon />
-          </Button>
-        )}
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      {trigger !== null && (
+        <DialogTrigger asChild>
+          {trigger ?? (
+            <Button variant="ghost" size="icon" aria-label="View details">
+              <EyeIcon />
+            </Button>
+          )}
+        </DialogTrigger>
+      )}
 
       <DialogContent className="sm:max-w-115 rounded-md p-6">
         {/* Visually hidden — the card content below already communicates the title */}

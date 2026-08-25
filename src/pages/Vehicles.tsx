@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 
 import { DataTable } from "@/components/ui/data-table";
 import { AddVehicleDialog } from "@/components/vehicles/add-vehicle";
-import { ViewVehicleDialog } from "@/components/vehicles/view-vehicle";
-import http from "@/lib/http";
-import type { Vehicle, VehicleResponse } from "@/types";
+import { VehicleActions } from "@/components/vehicles/vehicle-actions";
+import { getVehicles } from "@/lib/vehicles";
+import type { Vehicle } from "@/types";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 const currency = new Intl.NumberFormat("en-GH", {
@@ -53,10 +53,10 @@ const columns: ColumnDef<Vehicle>[] = [
   },
   {
     id: "actions",
-    header: () => <div className="text-right">View</div>,
+    header: () => <div className="text-right">Actions</div>,
     cell: ({ row }) => (
       <div className="flex justify-end">
-        <ViewVehicleDialog vehicle={row.original} />
+        <VehicleActions vehicle={row.original} />
       </div>
     ),
   },
@@ -75,21 +75,13 @@ export default function Vehicles() {
     return () => clearTimeout(timeout);
   }, [search]);
 
-  async function getVehicles() {
-    const params = new URLSearchParams({
-      page: String(page),
-      limit: String(PAGE_SIZE),
-    });
-    if (debouncedSearch) params.set("search", debouncedSearch);
-
-    const res = await http.get<VehicleResponse>(
-      `vehicles?${params.toString()}`,
-    );
-    return res;
-  }
-
   const { data, isLoading } = useQuery({
-    queryFn: getVehicles,
+    queryFn: () =>
+      getVehicles({
+        page,
+        limit: PAGE_SIZE,
+        search: debouncedSearch,
+      }),
     queryKey: ["vehicles", { page, search: debouncedSearch }],
     placeholderData: keepPreviousData,
   });
